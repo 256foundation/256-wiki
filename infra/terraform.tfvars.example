@@ -1,0 +1,20 @@
+# 256-wiki Terraform variables — copy to terraform.tfvars (gitignored) and fill.
+# Secrets come from the 256-infra ansible-vault per org convention; never commit
+# real values. `make plan` works with everything empty (plan-only culture).
+
+aws_region       = "us-east-1"
+site_domain      = "wiki.256foundation.org"
+
+# Leave empty to have the module create the ACM cert (then add the printed
+# validation CNAME to 256-infra DNS), or point at an existing us-east-1 cert:
+# acm_certificate_arn = "arn:aws:acm:us-east-1:845875661254:certificate/…"
+
+# Where #256-infrastructure alerts land (email leg of the SNS topic; the Slack
+# webhook is subscribed by the infra agent):
+# alarm_email = "infra@256foundation.org"
+
+# ── Secrets (ansible-vault → here; sensitive) ────────────────────────────────
+# openrouter_api_key = "sk-or-…"
+# turnstile_secret   = "0x…"
+# session_secret     = "<openssl rand -hex 32>"
+# github_token       = "ghp_…"
