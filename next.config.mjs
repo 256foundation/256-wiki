@@ -12,6 +12,7 @@ const nextConfig = {
     const api = process.env.WIKI_API_ORIGIN || "http://localhost:8787";
     return [
       { source: "/api/:path*", destination: `${api}/api/:path*` },
+      { source: "/a/:path*", destination: `${api}/a/:path*` },
       { source: "/mcp", destination: `${api}/mcp` },
     ];
   },

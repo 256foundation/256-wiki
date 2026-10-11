@@ -34,6 +34,7 @@ export interface RetrievalHit {
   topic: string;
   title: string;
   snippet: string;
+  text: string; // the winning chunk's full text — RAG context
   score: number;
   asOf: string | null;
   statuses: string[];
@@ -124,8 +125,9 @@ const K1 = 1.4;
 const B = 0.75;
 
 /** BM25 over chunks + title/summary boost + As-Of recency tiebreak. */
-export function retrieve(index: RetrievalIndex, query: string, opts: { limit?: number; topic?: string } = {}): RetrievalHit[] {
+export function retrieve(index: RetrievalIndex, query: string, opts: { limit?: number; topic?: string; minScore?: number } = {}): RetrievalHit[] {
   const limit = opts.limit ?? 8;
+  const minScore = opts.minScore ?? 0;
   const qTokens = tokenize(query);
   if (!qTokens.length) return [];
   const N = index.chunks.length;
@@ -166,6 +168,7 @@ export function retrieve(index: RetrievalIndex, query: string, opts: { limit?: n
   const seenSlug = new Set<string>();
   const hits: RetrievalHit[] = [];
   for (const { chunk, score } of scored) {
+    if (score < minScore) break; // sorted desc — nothing further can clear the floor
     if (seenSlug.has(chunk.slug)) continue;
     seenSlug.add(chunk.slug);
     hits.push({
@@ -173,6 +176,7 @@ export function retrieve(index: RetrievalIndex, query: string, opts: { limit?: n
       topic: chunk.topic,
       title: chunk.title,
       snippet: makeSnippet(chunk.text, qTokens),
+      text: chunk.text.slice(0, 1500),
       score: Math.round(score * 1000) / 1000,
       asOf: chunk.asOf,
       statuses: chunk.statuses,

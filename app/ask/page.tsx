@@ -1,4 +1,13 @@
-export const metadata = { title: "Ask the brain" };
+import type { Metadata } from "next";
+import AskConsole from "@/components/AskConsole";
+
+export const metadata: Metadata = {
+  title: "Ask the brain",
+  description:
+    "Grounded answers from the 256 Foundation Public Mining Brain — every answer cites its wiki sources with As-Of dates and gets a permanent permalink.",
+};
+
+const ANON_QUOTA = Number(process.env.NEXT_PUBLIC_ANON_QUOTA || 5);
 
 export default function AskPage() {
   return (
@@ -6,19 +15,17 @@ export default function AskPage() {
       <h1>Ask the brain</h1>
       <p className="summary">
         Grounded answers from the Public Mining Brain — every answer cites its wiki sources with
-        As-Of dates, and links a permanent permalink you can share.
+        As-Of dates, surfaces disputes instead of picking winners, and links a permanent permalink
+        you can share or cite.
       </p>
 
-      <div className="ask-shell">
-        <p>
-          <strong>Chat opens with the Phase 2 deploy.</strong> The retrieval + answer pipeline is
-          being wired now — this shell ships early so the surface and copy are reviewable.
-        </p>
-        <p className="note">
-          Anonymous: 5 answers/day per IP (Turnstile-gated) · signed-in: 25/day ·
-          cache hits never cost a thing.
-        </p>
-      </div>
+      <AskConsole anonQuota={ANON_QUOTA} />
+
+      <p className="note">
+        Anonymous: {ANON_QUOTA} answers/day · signed-in: 25/day · repeated questions are served from
+        cache and never cost anyone anything · when the foundation's daily token budget is spent, the
+        agent path below stays wide open.
+      </p>
 
       <h2 id="connect-your-agent">Connect your own agent — the unlimited path</h2>
       <p>
@@ -53,8 +60,8 @@ not know.`}</code></pre>
 
       <p className="note">
         API reference: <code>/api/index.json</code> · <code>/api/search?q=</code> ·{" "}
-        <code>/api/pages/&lt;slug&gt;.md</code> · <code>/api/live.json</code> · docs land with the
-        Phase 3 deploy.
+        <code>/api/pages/&lt;slug&gt;.md</code> · <code>/api/live.json</code> · <code>POST /api/ask</code> · docs land
+        with the Phase 3 deploy.
       </p>
     </div>
   );
