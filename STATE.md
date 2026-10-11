@@ -6,21 +6,23 @@
 
 ## Current status
 
-**Phase 0 in progress.** Next queue below.
+**Phase 0.1 + 0.2 complete. 0.3 (infra) in progress.**
 
 ## Done
 
 | Date | Task | Commit/PR | Notes |
 |---|---|---|---|
-| 2026-10-11 | Repo scaffold: git init, remote, README, LICENSE (MIT+note), .gitignore, .env.example, STATE.md | (this commit) | public-mining-brain has no LICENSE file → MIT for code, provenance note for content |
+| 2026-10-11 | Repo scaffold: git init, remote, README, LICENSE (MIT+note), .gitignore, .env.example, STATE.md | 318ca8f | public-mining-brain has no LICENSE file → MIT for code, provenance note for content |
+| 2026-10-11 | `scripts/build_export.py` + pack-release CI + content-gap-report template | [public-mining-brain#1](https://github.com/256foundation/public-mining-brain/pull/1) | Schema v1 verified on live wiki: 127 pages, 11 topics, 0 lint errors; `--check` deterministic; release tag `pack-v<date>.<shorthash>`; awaiting human review/merge |
 
 ## In progress
 
-- Phase 0.2 — PR into public-mining-brain: `scripts/build_export.py` + pack-release GitHub Action + content-gap-report issue template.
+- Phase 0.3 — `infra/` Terraform module (S3+CloudFront+Lambda+DynamoDB, alarms→SNS, Budgets $10).
+- Phase 0.4 — Next.js scaffold + CI.
 
 ## Next queue (plan §7)
 
-1. Phase 0.2 — build_export.py PR into public-mining-brain (scripts + CI release + issue template)
+1. ~~Phase 0.2 — build_export.py PR into public-mining-brain~~ ✅ PR #1 open
 2. Phase 0.3 — `infra/` Terraform: S3, CloudFront+ACM, Lambda, DynamoDB ×3, alarms→SNS, Budgets $10, Makefile (plan default / apply explicit)
 3. Phase 0.4 — Next.js scaffold: static export, pack fetch from GitHub release, CI (build/lint/test, no AWS secrets)
 4. Phase 1 — read-only site (epistemics UI, Pagefind, live strip, RSS, about/contribute)
