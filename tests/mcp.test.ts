@@ -2,6 +2,7 @@
 
 import { describe, it, expect, beforeAll } from "vitest";
 import { app } from "../server/app";
+import { pack } from "../server/pack";
 
 function rpc(id: number | null, method: string, params?: Record<string, unknown>) {
   const body: Record<string, unknown> = { jsonrpc: "2.0", method };
@@ -46,11 +47,13 @@ describe("MCP /mcp", () => {
   });
 
   it("get_page returns the full markdown with As-Of header", async () => {
-    const res = await rpc(4, "tools/call", { name: "get_page", arguments: { slug: "pool-payout-schemes" } });
+    // pick a page from the loaded pack (pack-agnostic: CI runs a 6-page sample)
+    const page = pack.pages.find((p) => p.body.length > 200 && p.asOf) ?? pack.pages[0];
+    const res = await rpc(4, "tools/call", { name: "get_page", arguments: { slug: page.slug } });
     const body = (await res.json()) as { result: { content: Array<{ text: string }>; isError?: boolean } };
     expect(body.result.isError).toBeUndefined();
-    expect(body.result.content[0].text).toContain("# Pool Payout Schemes");
-    expect(body.result.content[0].text).toContain("As-Of:");
+    expect(body.result.content[0].text).toContain(`# ${page.title}`);
+    if (page.asOf) expect(body.result.content[0].text).toContain("As-Of:");
   });
 
   it("get_page on an unknown slug is a tool error", async () => {
@@ -62,7 +65,8 @@ describe("MCP /mcp", () => {
   it("resources are listed and readable as markdown", async () => {
     const list = await rpc(6, "resources/list");
     const listBody = (await list.json()) as { result: { resources: Array<{ uri: string }> } };
-    expect(listBody.result.resources.length).toBeGreaterThanOrEqual(100);
+    // one resource per pack page (pack-agnostic: CI runs a 6-page sample)
+    expect(listBody.result.resources.length).toBe(pack.pages.length);
     const some = listBody.result.resources[0].uri;
     const read = await rpc(7, "resources/read", { uri: some });
     const readBody = (await read.json()) as { result: { contents: Array<{ uri: string; mimeType: string; text: string }> } };
