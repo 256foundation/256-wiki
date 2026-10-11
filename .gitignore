@@ -1,0 +1,33 @@
+# dependencies
+node_modules/
+
+# next.js
+.next/
+out/
+
+# env & secrets
+.env
+.env.local
+.env.*.local
+
+# terraform
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+tfplan
+tfplan.json
+
+# lambda build artifacts
+dist/
+lambda.zip
+
+# pack fetched at build time (regenerated from public-mining-brain releases)
+data/pack/
+
+# misc
+.DS_Store
+*.log
+coverage/
+tsconfig.tsbuildinfo
+next-env.d.ts
