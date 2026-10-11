@@ -97,6 +97,12 @@ export default function AskConsole({ anonQuota }: { anonQuota: number }) {
     }
   }
 
+  // landing starter chips: /ask?q=… pre-fills the box once (one click = ask)
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search).get("q");
+    if (q && inputRef.current && !inputRef.current.value) inputRef.current.value = q;
+  }, []);
+
   // Turnstile (production): load the script + render the invisible-ish widget
   useEffect(() => {
     if (!SITE_KEY) return;
