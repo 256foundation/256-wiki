@@ -1,6 +1,8 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { getLiveStats } from "./live";
+import { getLiveStats } from "@/server/live";
+import { buildIndex, retrieve } from "@/lib/retrieval";
+import { pack } from "@/server/pack";
 
 /**
  * The runtime API — deployed as one Node Lambda behind CloudFront (infra/).
@@ -16,6 +18,21 @@ app.use("/mcp/*", cors());
 
 app.get("/api/health", (c) => c.json({ ok: true, service: "256-wiki-api" }));
 
+// retrieval index — built once per cold start (127 pages ≈ ms)
+const searchIndex = buildIndex(pack);
+
+app.get("/api/search", (c) => {
+  const q = c.req.query("q") ?? "";
+  const topic = c.req.query("topic") || undefined;
+  const limit = Math.min(25, Math.max(1, Number(c.req.query("limit")) || 8));
+  if (!q.trim()) return c.json({ query: q, packHash: pack.meta.contentHash, results: [] });
+  const results = retrieve(searchIndex, q, { limit, topic });
+  return c.json(
+    { query: q, packHash: pack.meta.contentHash, count: results.length, results },
+    { headers: { "Cache-Control": "public, max-age=60" } },
+  );
+});
+
 app.get("/api/live.json", async (c) => {
   const stats = await getLiveStats();
   return c.json(stats, {
@@ -23,16 +40,7 @@ app.get("/api/live.json", async (c) => {
   });
 });
 
-// Phase 2 wires real retrieval (BM25/FTS over the bundled pack) into these.
-app.get("/api/search", (c) => {
-  const q = c.req.query("q") ?? "";
-  if (!q.trim()) return c.json({ query: q, results: [] });
-  return c.json(
-    { error: "not implemented until phase 2 (ask pipeline) — use /api/index.json or Pagefind" },
-    501,
-  );
-});
-
+// Phase 2 wires the ask pipeline into these; /api/search above is already live.
 app.post("/api/ask", (c) =>
   c.json({ error: "ask pipeline lands with phase 2 — the agent surface (MCP/REST) is the unlimited path" }, 501),
 );

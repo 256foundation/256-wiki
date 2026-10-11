@@ -11,7 +11,7 @@
     "postbuild": "npx --yes pagefind --site out || echo 'pagefind skipped (search index optional)'",
     "build:lambda": "npm run fetch:pack && node scripts/build-lambda.mjs",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "npm run fetch:pack && tsc --noEmit",
     "test": "vitest run"
   },
   "dependencies": {
