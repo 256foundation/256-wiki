@@ -10,6 +10,11 @@ export const metadata: Metadata = {
   },
   description:
     "Grounded, As-Of-stamped, Disputed-block-honest bitcoin-mining knowledge — maintained by agents under human review, open to humans and AI agents alike.",
+  openGraph: {
+    siteName: "256 Foundation — Public Mining Brain",
+    type: "website",
+    url: "/",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -27,6 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 function SiteHeader() {
   const links = [
     ["/topics", "Topics"],
+    ["/search", "Search"],
     ["/ask", "Ask"],
     ["/gaps", "Gaps"],
     ["/contribute", "Contribute"],

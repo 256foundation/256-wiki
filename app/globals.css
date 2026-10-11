@@ -298,6 +298,19 @@ h1.title { font-size: clamp(26px, 4.5vw, 34px); letter-spacing: -0.025em; margin
 .copyblock { position: relative; }
 .copyblock code.inline-list { display: block; white-space: pre-wrap; }
 
+/* pagefind search UI — match the wiki's look */
+.pagefind-holder .pagefind-ui {
+  --pagefind-ui-primary: var(--orange-ink);
+  --pagefind-ui-text: var(--ink);
+  --pagefind-ui-background: #fff;
+  --pagefind-ui-border: var(--line);
+  --pagefind-ui-tag: var(--paper-2);
+  --pagefind-ui-border-radius: 8px;
+  font-family: var(--sans);
+}
+.pagefind-holder .pagefind-ui__result .pagefind-ui__result-name { font-weight: 600; }
+.pagefind-holder .pagefind-ui__result-excerpt mark { background: var(--amber-bg); color: var(--amber-ink); }
+
 @media (max-width: 640px) {
   .site-header .bar { flex-wrap: wrap; }
   .site-header nav { gap: 12px; }
