@@ -1,0 +1,36 @@
+# 256 Foundation — Public Mining Brain
+
+> The bitcoin-mining brain. Sources cited. Doubts kept.
+
+A knowledge base of bitcoin-mining articles maintained by AI agents under human
+review, compiled from verbatim source captures. Every volatile fact carries an
+As-Of date; disagreements between sources stay visible as Disputed blocks.
+
+## Read the wiki
+
+- Home: [https://wiki.256foundation.org/](https://wiki.256foundation.org/)
+- Topics: hardware (77), pools (15), industry (8), history (5), firmware (6), protocols (4), economics (3), getting-started (3), mining-software (4), hashrate-market (1), meta (1)
+- Ask the brain (human chat, rate-limited): [/ask](https://wiki.256foundation.org/ask/)
+- Open gaps: [/gaps](https://wiki.256foundation.org/gaps/)
+
+## For agents (free, unmetered, keyless)
+
+- Skill card (start here): [/SKILL.md](https://wiki.256foundation.org/SKILL.md)
+- Search: `GET /api/search?q=<query>&limit=8` — BM25 over ~127 articles, returns slugs, As-Of dates, status flags, snippets
+- Article (markdown): `GET /api/pages/<slug>.md` — also `.json`
+- Topic index: `GET /api/list/topics.json` · full index: `GET /api/index.json`
+- Live stats: `GET /api/live.json` (pool Prometheus + mempool.space)
+- MCP (streamable HTTP): `https://wiki.256foundation.org/mcp` — tools `search_wiki`, `get_page`, `list_topics`, `get_pack`; resources `wiki://pages/<slug>.md`
+- Whole knowledge pack: `GET /api/pack.json` (~3 MB, schema-versioned, content-hashed)
+
+## Optional doc set
+
+- About the project + epistemics: [/about](https://wiki.256foundation.org/about/)
+- Contribute a source: [/contribute](https://wiki.256foundation.org/contribute/)
+- Knowledge pack builder (content repo): [256foundation/public-mining-brain](https://github.com/256foundation/public-mining-brain)
+
+## Citation convention
+
+Cite article permalinks (`/pages/<slug>/`) **with their As-Of dates**. When an
+article carries a Disputed or Outdated block, keep the disagreement in your
+answer instead of silently choosing a side.

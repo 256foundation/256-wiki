@@ -6,7 +6,7 @@
 
 ## Current status
 
-**Phase 0 + Phase 1 complete. Phase 2 ask pipeline: slices A + B done and verified (retrieval, LLM adapter, quotas, cache, breaker, permalinks, chat UI). Slice C (identity) code-complete + verified in dev: signed sessions, dev-login, NIP-98 Nostr; OAuth providers await Tyler's credentials. Next: Phase 3 agent surface (MCP, SKILL.md, llms.txt, README quickstarts).**
+**Phase 0 + 1 + 2 (slices A–C) complete. Phase 3 agent surface complete: MCP streamable HTTP (real-client handshake verified), /SKILL.md, /llms.txt, static topic/pack routes, README quickstarts. Next: Phase 4 — gaps board from query log, gap-report wiring, POD256 integration.**
 
 ## Done
 
@@ -19,7 +19,8 @@
 | 2026-10-11 | Phase 1: Pagefind search UI + OG meta + header Search nav + RSS + static API routes | 5221394 | search verified on static export (79 hits "hydro hashrate"); live strip verified w/ real pool+mempool data |
 | 2026-10-11 | Phase 2 slice A — BM25 retrieval + real `/api/search` | f2dc1bd | lib/retrieval.ts (chunked BM25 + boosts + snippets, pure TS); pack bundled into Lambda (772KB zip); verified vs 127-page pack; 11 retrieval tests |
 | 2026-10-11 | Phase 2 slice B — ask pipeline: LLM adapter, store (Dynamo+memory), quotas, cache, breaker, query log, `/a/<id>` permalinks, `/ask` chat UI | eff423b | Verified E2E in dev vs mock LLM (scripts/mock-llm.mjs): answer+citations, cache hit free, gap answers free + logged, quota 429, breaker 429, permalink HTML w/ OG + As-Of sources; 34/34 tests; browser-verified desktop+mobile (docs/screens/ask-*.jpg, permalink-desktop.jpg); CI green |
-| 2026-10-11 | Phase 2 slice C — identity: HMAC-signed session cookies, OAuth2 GitHub + OIDC Google/Authentik (jose), NIP-98 Nostr (@noble), dev-login, signed-in quota tier + Turnstile skip | (this commit) | Verified live: dev-login → cookie → /api/auth/me; identified ask draws 25/day bucket w/o captcha; real NIP-98 event signed w/ noble + accepted. Provider buttons render per configured credentials; `/api/auth/providers` self-describes; 44/44 tests |
+| 2026-10-11 | Phase 2 slice C — identity: HMAC-signed session cookies, OAuth2 GitHub + OIDC Google/Authentik (jose), NIP-98 Nostr (@noble), dev-login, signed-in quota tier + Turnstile skip | b70f8fa | Verified live: dev-login → cookie → /api/auth/me; identified ask draws 25/day bucket w/o captcha; real NIP-98 event signed w/ noble + accepted. Provider buttons render per configured credentials; `/api/auth/providers` self-describes; 44/44 tests; CI green |
+| 2026-10-11 | Phase 3 — agent surface: MCP streamable HTTP (`/mcp`), `/SKILL.md`, `/llms.txt`, static `/api/list/topics.json` + `/api/pack.json`, README quickstarts | (this commit) | MCP: initialize/tools×4/resources/notifications per JSON-RPC 2.0 (session id on init); **real-client verified: `claude mcp list` → ✔ Connected**; full headless E2E deferred (Tyler's Claude auth expired). SKILL.md teaches the query→fetch→cite loop; llms.txt indexes the site. 53/53 tests incl. 9 protocol tests |
 
 ## In progress
 
@@ -34,8 +35,8 @@
 5. ~~Phase 2 slice A — retrieval + /api/search~~ ✅
 6. ~~Phase 2 slice B — ask pipeline (LLM, quotas, cache, breaker, permalinks, chat UI)~~ ✅
 7. ~~Phase 2 slice C — identity (GitHub/Google/Authentik OIDC + Nostr NIP-07, signed sessions, 25/day tier, Turnstile skip)~~ ✅ code+dev-verified; OAuth buttons light up when Tyler provisions credentials
-8. Phase 3 — agent surface (MCP streamable HTTP, SKILL.md, llms.txt, README quickstarts, permalink OG polish)
-9. Phase 4 — gaps board from query log, weekly gap-report automation, POD256 integration
+8. ~~Phase 3 — agent surface (MCP streamable HTTP, SKILL.md, llms.txt, README quickstarts, permalink OG)~~ ✅
+9. Phase 4 — gaps board from query log (`/api/gaps.json` + /gaps client fetch), weekly gap-report automation wiring, POD256 integration
 
 ## Decisions / deviations
 

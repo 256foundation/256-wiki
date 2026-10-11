@@ -9,6 +9,7 @@ import { renderAnswerPage, renderNotFound } from "@/server/permalink";
 import { llmConfigured } from "@/server/llm";
 import { authRoutes, currentSession } from "@/server/auth";
 import { subjectKey } from "@/server/session";
+import { mcpRoutes } from "@/server/mcp";
 
 /**
  * The runtime API — deployed as one Node Lambda behind CloudFront (infra/).
@@ -24,6 +25,9 @@ app.use("/mcp/*", cors());
 
 // identity (Phase 2 slice C): OAuth2/OIDC + Nostr + sessions
 app.route("/", authRoutes());
+
+// MCP streamable HTTP — the unlimited agent path (Phase 3)
+app.route("/", mcpRoutes());
 
 app.get("/api/auth/me", (c) => {
   const session = currentSession(c.req.header("cookie"));
@@ -118,11 +122,6 @@ app.get("/a/:id", async (c) => {
 
 app.post("/api/suggest", (c) =>
   c.json({ error: "suggest→issue lands with phase 2 — for now use the GitHub issue template" }, 501),
-);
-
-// MCP streamable HTTP endpoint — placeholder until Phase 3.
-app.all("/mcp", (c) =>
-  c.json({ jsonrpc: "2.0", error: { code: -32000, message: "MCP server lands with phase 3" }, id: null }, 501),
 );
 
 export type App = typeof app;

@@ -102,7 +102,33 @@ API server for local development of ask/MCP paths:
 
 ```bash
 npm run dev:api               # Hono on :8787, proxied from next dev
+node scripts/mock-llm.mjs     # optional: OpenAI-shaped mock LLM on :8788
+# then, for a zero-key local ask pipeline:
+# LLM_BASE_URL=http://localhost:8788/v1 LLM_API_KEY=dev LLM_MODEL=mock/haiku npm run dev:api
 ```
+
+## Agent quickstart
+
+Point any MCP client at the wiki (locally: `http://localhost:8787/mcp`, in
+production: `https://wiki.256foundation.org/mcp`):
+
+```bash
+claude mcp add mining-brain http://localhost:8787/mcp          # Claude Code
+codex mcp add mining-brain --url http://localhost:8787/mcp     # Codex CLI
+opencode mcp add --transport http mining-brain http://localhost:8787/mcp
+```
+
+Tools: `search_wiki` · `get_page` · `list_topics` · `get_pack`. Resources:
+`wiki://pages/<slug>.md`. Or skip MCP entirely — plain REST works from curl:
+
+```bash
+curl -s 'localhost:8787/api/search?q=fpps+fees&limit=3' | jq
+curl -s 'localhost:8787/api/pages/pool-payout-schemes.md' | head
+```
+
+Teach any LLM the full loop with one file: [`/SKILL.md`](public/SKILL.md)
+(site copy: `https://wiki.256foundation.org/SKILL.md`). LLM index:
+[`/llms.txt`](public/llms.txt).
 
 Verify everything:
 

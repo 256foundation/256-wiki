@@ -55168,11 +55168,239 @@ function parseCookie(cookieHeader, name) {
   return raw2 ? raw2.split("=").slice(1).join("=") : void 0;
 }
 
+// server/mcp.ts
+var SITE = process.env.PUBLIC_BASE_URL || "https://wiki.256foundation.org";
+var PROTOCOL_VERSION = "2025-06-18";
+function pageUrl(slug) {
+  return `${SITE}/pages/${slug}/`;
+}
+function pageMarkdown(slug) {
+  const page = pack.pages.find((p3) => p3.slug === slug);
+  if (!page) return null;
+  const head = [
+    `# ${page.title}`,
+    "",
+    `- Topic: ${page.topic}`,
+    page.asOf ? `- As-Of: ${page.asOf}` : null,
+    page.statuses.length ? `- Statuses: ${page.statuses.join(", ")}` : null,
+    `- URL: ${pageUrl(slug)}`,
+    "",
+    page.summary ? `> ${page.summary}` : null,
+    ""
+  ].filter((x) => x !== null).join("\n");
+  return `${head}
+${page.body}
+`;
+}
+function jsonText(value) {
+  return [{ type: "text", text: typeof value === "string" ? value : JSON.stringify(value, null, 2) }];
+}
+var toolIndex = buildIndex(pack);
+function callTool(name, args) {
+  switch (name) {
+    case "search_wiki": {
+      const query = String(args.query ?? "").trim();
+      if (!query) return { content: jsonText({ error: "query required" }), isError: true };
+      const topic = typeof args.topic === "string" && args.topic ? args.topic : void 0;
+      const limit = Math.min(25, Math.max(1, Number(args.limit) || 8));
+      const results = retrieve(toolIndex, query, { limit, topic }).map((h5) => ({
+        slug: h5.slug,
+        title: h5.title,
+        topic: h5.topic,
+        url: pageUrl(h5.slug),
+        asOf: h5.asOf,
+        statuses: h5.statuses,
+        score: h5.score,
+        snippet: h5.snippet
+      }));
+      return {
+        content: jsonText({
+          query,
+          packHash: pack.meta.contentHash,
+          note: "Ground answers in these results; cite article URLs with their As-Of dates; keep Disputed blocks visible.",
+          results
+        })
+      };
+    }
+    case "get_page": {
+      const slug = String(args.slug ?? "");
+      const md = pageMarkdown(slug);
+      if (!md) return { content: jsonText({ error: `no page ${slug}` }), isError: true };
+      return { content: jsonText(md) };
+    }
+    case "list_topics": {
+      const topics = /* @__PURE__ */ new Map();
+      for (const p3 of pack.pages) topics.set(p3.topic, (topics.get(p3.topic) ?? 0) + 1);
+      return {
+        content: jsonText({
+          packHash: pack.meta.contentHash,
+          pageCount: pack.pages.length,
+          topics: [...topics.entries()].map(([name2, count]) => ({ name: name2, count }))
+        })
+      };
+    }
+    case "get_pack": {
+      return {
+        content: jsonText({
+          meta: pack.meta,
+          note: "Full index below; fetch any page via get_page or /api/pages/<slug>.md",
+          pages: pack.pages.map((p3) => ({
+            slug: p3.slug,
+            title: p3.title,
+            topic: p3.topic,
+            asOf: p3.asOf,
+            statuses: p3.statuses,
+            url: pageUrl(p3.slug)
+          }))
+        })
+      };
+    }
+    default:
+      return { content: jsonText({ error: `unknown tool ${name}` }), isError: true };
+  }
+}
+var TOOLS = [
+  {
+    name: "search_wiki",
+    description: "Full-text BM25 search over the 256 Foundation Public Mining Brain (bitcoin-mining knowledge base). Returns ranked articles with slug, title, As-Of date, status flags (Disputed/Outdated) and a snippet. Ground every answer in these results and cite the article URLs.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        query: { type: "string", description: "search query \u2014 numbers and model names are tokens (e.g. 's21 473', 'fpps fees')" },
+        topic: { type: "string", description: "optional topic filter (see list_topics)" },
+        limit: { type: "number", description: "max results, default 8, max 25" }
+      },
+      required: ["query"]
+    }
+  },
+  {
+    name: "get_page",
+    description: "Fetch one wiki article as markdown, with its As-Of date and epistemic status flags. Use after search_wiki to read the full article (specs, Disputed blocks, sources).",
+    inputSchema: {
+      type: "object",
+      properties: { slug: { type: "string", description: "article slug, e.g. 'antminer-s21-xp-hyd'" } },
+      required: ["slug"]
+    }
+  },
+  {
+    name: "list_topics",
+    description: "List the knowledge pack's topics with article counts \u2014 good first call for orientation.",
+    inputSchema: { type: "object", properties: {} }
+  },
+  {
+    name: "get_pack",
+    description: "Knowledge-pack metadata + the full article index (slug/title/topic/As-Of per page). Use for bulk orientation; fetch bodies with get_page.",
+    inputSchema: { type: "object", properties: {} }
+  }
+];
+function handleRpc(req) {
+  if (req.id === void 0 || req.id === null) {
+    return { status: 202, body: null };
+  }
+  switch (req.method) {
+    case "initialize":
+      return {
+        status: 200,
+        sessionId: crypto.randomUUID(),
+        body: {
+          jsonrpc: "2.0",
+          id: req.id,
+          result: {
+            protocolVersion: PROTOCOL_VERSION,
+            capabilities: { tools: { listChanged: false }, resources: { subscribe: false } },
+            serverInfo: {
+              name: "256-foundation-mining-brain",
+              version: `pack:${pack.meta.contentHash.slice(7, 15)}`
+            },
+            instructions: "Bitcoin-mining knowledge base. search_wiki first, then get_page for the full article. Ground answers in returned content; cite article URLs with As-Of dates; surface Disputed blocks instead of picking a winner; say when the brain doesn't know. Retrieval is free and unmetered."
+          }
+        }
+      };
+    case "tools/list":
+      return { status: 200, body: { jsonrpc: "2.0", id: req.id, result: { tools: TOOLS } } };
+    case "tools/call": {
+      const name = String(req.params?.name ?? "");
+      const args = req.params?.arguments ?? {};
+      const out = callTool(name, args);
+      return { status: 200, body: { jsonrpc: "2.0", id: req.id, result: out } };
+    }
+    case "resources/list":
+      return {
+        status: 200,
+        body: {
+          jsonrpc: "2.0",
+          id: req.id,
+          result: {
+            resources: pack.pages.map((p3) => ({
+              uri: `wiki://pages/${p3.slug}.md`,
+              name: p3.title,
+              description: `${p3.topic}${p3.asOf ? ` \xB7 As-Of ${p3.asOf}` : ""}${p3.statuses.length ? ` \xB7 ${p3.statuses.join("/")}` : ""}`,
+              mimeType: "text/markdown"
+            }))
+          }
+        }
+      };
+    case "resources/read": {
+      const uri = String(req.params?.uri ?? "");
+      const match2 = /^wiki:\/\/pages\/([a-z0-9-]+)\.md$/.exec(uri);
+      const md = match2 ? pageMarkdown(match2[1]) : null;
+      if (!md) {
+        return {
+          status: 200,
+          body: { jsonrpc: "2.0", id: req.id, error: { code: -32602, message: `unknown resource ${uri}` } }
+        };
+      }
+      return {
+        status: 200,
+        body: { jsonrpc: "2.0", id: req.id, result: { contents: [{ uri, mimeType: "text/markdown", text: md }] } }
+      };
+    }
+    case "ping":
+      return { status: 200, body: { jsonrpc: "2.0", id: req.id, result: {} } };
+    default:
+      return {
+        status: 200,
+        body: { jsonrpc: "2.0", id: req.id, error: { code: -32601, message: `method not found: ${req.method}` } }
+      };
+  }
+}
+function mcpRoutes() {
+  const mcp = new Hono3();
+  mcp.post("/mcp", async (c5) => {
+    let rpc;
+    try {
+      rpc = await c5.req.json();
+    } catch {
+      return c5.json({ jsonrpc: "2.0", id: null, error: { code: -32700, message: "parse error" } }, 400);
+    }
+    if (Array.isArray(rpc)) {
+      const results = rpc.map(handleRpc);
+      const bodies = results.filter((r5) => r5.status !== 202).map((r5) => r5.body);
+      const sid = results.find((r5) => r5.sessionId)?.sessionId;
+      const headers2 = {};
+      if (sid) headers2["Mcp-Session-Id"] = sid;
+      return c5.json(bodies, 200, headers2);
+    }
+    const out = handleRpc(rpc);
+    if (out.status === 202) return c5.body(null, 202);
+    const headers = {};
+    if (out.sessionId) headers["Mcp-Session-Id"] = out.sessionId;
+    return c5.json(out.body, 200, headers);
+  });
+  mcp.get(
+    "/mcp",
+    (c5) => c5.json({ jsonrpc: "2.0", id: null, error: { code: -32e3, message: "GET/SSE not supported \u2014 POST JSON-RPC" } }, 405)
+  );
+  mcp.delete("/mcp", (c5) => c5.body(null, 204));
+  return mcp;
+}
+
 // server/app.ts
 var app = new Hono3();
 app.use("/api/*", cors());
 app.use("/mcp/*", cors());
 app.route("/", authRoutes());
+app.route("/", mcpRoutes());
 app.get("/api/auth/me", (c5) => {
   const session = currentSession(c5.req.header("cookie"));
   if (!session) return c5.json({ signedIn: false });
@@ -55256,10 +55484,6 @@ app.get("/a/:id", async (c5) => {
 app.post(
   "/api/suggest",
   (c5) => c5.json({ error: "suggest\u2192issue lands with phase 2 \u2014 for now use the GitHub issue template" }, 501)
-);
-app.all(
-  "/mcp",
-  (c5) => c5.json({ jsonrpc: "2.0", error: { code: -32e3, message: "MCP server lands with phase 3" }, id: null }, 501)
 );
 
 // server/handler.ts

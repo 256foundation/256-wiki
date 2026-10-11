@@ -193,24 +193,29 @@ export default function AskConsole({ anonQuota }: { anonQuota: number }) {
 
       <div className="askmeta">
         <span className="note">
-          {me?.signedIn
-            ? `signed in as ${me.name} (${me.tier === "team" ? "unlimited" : "25/day"})`
-            : SITE_KEY
-              ? tsToken
-                ? "✓ verified human"
-                : "complete the check below to ask"
-              : null}
-          {quotaLeft !== null ? ` · ${quotaLeft} free answer${quotaLeft === 1 ? "" : "s"} left today` : me?.signedIn ? "" : ` · ${anonQuota} free answers/day`}
-          {me?.signedIn ? "" : " · "}
-          <em>cache hits are always free</em>
-          {me?.signedIn ? (
-            <>
-              {" · "}
-              <a className="signout" href="/api/auth/signout">
-                sign out
-              </a>
-            </>
-          ) : null}
+          {(() => {
+            const parts: React.ReactNode[] = [];
+            const push = (node: React.ReactNode) => {
+              if (parts.length) parts.push(" · ");
+              parts.push(node);
+            };
+            if (me?.signedIn) {
+              push(`signed in as ${me.name} (${me.tier === "team" ? "unlimited" : "25/day"})`);
+            } else if (SITE_KEY) {
+              push(tsToken ? "✓ verified human" : "complete the check below to ask");
+            }
+            if (quotaLeft !== null) push(`${quotaLeft} free answer${quotaLeft === 1 ? "" : "s"} left today`);
+            else if (!me?.signedIn) push(`${anonQuota} free answers/day`);
+            push(<em>cache hits are always free</em>);
+            if (me?.signedIn) {
+              push(
+                <a className="signout" href="/api/auth/signout">
+                  sign out
+                </a>,
+              );
+            }
+            return parts;
+          })()}
         </span>
         <span className="note hint">⌘↵ to ask</span>
       </div>
