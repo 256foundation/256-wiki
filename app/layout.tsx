@@ -1,6 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Barlow_Condensed, Inter, Space_Mono } from "next/font/google";
 import "./globals.css";
+
+const display = Barlow_Condensed({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-barlow",
+  display: "swap",
+});
+const sans = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const mono = Space_Mono({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-space-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://wiki.256foundation.org"),
@@ -9,7 +24,7 @@ export const metadata: Metadata = {
     template: "%s — 256 Foundation wiki",
   },
   description:
-    "Grounded, As-Of-stamped, Disputed-block-honest bitcoin-mining knowledge — maintained by agents under human review, open to humans and AI agents alike.",
+    "The bitcoin-mining brain: grounded, As-Of-stamped, dispute-honest. Ask it, browse it, or point your agent at it.",
   openGraph: {
     siteName: "256 Foundation — Public Mining Brain",
     type: "website",
@@ -19,7 +34,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
       <body>
         <SiteHeader />
         <main>{children}</main>
@@ -30,26 +45,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 
 function SiteHeader() {
-  const links = [
-    ["/topics", "Topics"],
-    ["/search", "Search"],
-    ["/ask", "Ask"],
-    ["/gaps", "Gaps"],
-    ["/contribute", "Contribute"],
-    ["/about", "About"],
-  ] as const;
   return (
     <header className="site-header">
       <div className="bar">
-        <Link href="/" className="brand">
-          <span className="brand-256">256</span> Foundation · Mining Brain
+        <Link href="/" className="brand" aria-label="256 Foundation — Mining Brain, home">
+          <span className="brand-top">256 Foundation</span>
+          <span className="brand-main">
+            Mining <em>Brain</em>
+          </span>
         </Link>
         <nav>
-          {links.map(([href, label]) => (
-            <a key={href} href={href}>
-              {label}
-            </a>
-          ))}
+          <a href="/ask">Ask</a>
+          <a href="/library">Library</a>
+          <a href="/about">About</a>
         </nav>
       </div>
     </header>
@@ -61,23 +69,21 @@ function SiteFooter() {
     <footer className="site-footer">
       <div className="wrap">
         <div className="cols">
-          <div>
-            <strong>256 Foundation</strong> is a 501(c)(3) public charity.
-            <br />
-            Content:{" "}
-            <a href="https://github.com/256foundation/public-mining-brain">public-mining-brain</a> ·
-            Site code: <a href="https://github.com/256foundation/256-wiki">256-wiki</a>
-          </div>
-          <div>
+          <span>
+            <a href="/gaps">Gaps</a> · <a href="/contribute">Contribute</a> ·{" "}
+            <a href="/agents">Agents</a> · <a href="/privacy">Privacy</a>
+          </span>
+          <span>
             <a href="/llms.txt">llms.txt</a> · <a href="/SKILL.md">SKILL.md</a> ·{" "}
-            <a href="/privacy">privacy</a> · <a href="/api/feed.xml">RSS</a> ·{" "}
+            <a href="/api/feed.xml">RSS</a> ·{" "}
             <a href="https://256foundation.org">256foundation.org</a>
-          </div>
+          </span>
+          <span>
+            256 Foundation is a 501(c)(3) public charity ·{" "}
+            <a href="https://github.com/256foundation/public-mining-brain">content</a> ·{" "}
+            <a href="https://github.com/256foundation/256-wiki">code</a>
+          </span>
         </div>
-        <p className="note" style={{ marginTop: 18 }}>
-          Answers are As-Of stamped and cite their sources. Where sources disagree, this wiki shows
-          the disagreement instead of picking a winner for you.
-        </p>
       </div>
     </footer>
   );
