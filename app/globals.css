@@ -343,6 +343,32 @@ h1.title { font-size: clamp(26px, 4.5vw, 34px); letter-spacing: -0.025em; margin
 .askmeta .hint { opacity: 0.7; }
 .turnstile { margin: 12px 0; }
 
+.signinrow {
+  display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  background: var(--paper-2);
+  padding: 10px 14px;
+  margin: 14px 0 4px;
+  font-size: 13.5px;
+}
+.signinrow-label { color: var(--ink-2); }
+.signinrow-btns { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.signinbtn {
+  font-size: 13px; font-weight: 600;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  padding: 5px 14px;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: inherit;
+}
+.signinbtn:hover { border-color: var(--ink-3); text-decoration: none; }
+.signinbtn.dev { font-family: var(--mono); font-weight: 400; color: var(--ink-3); }
+.signout { color: var(--ink-3); }
+
 .askmsg {
   border: 1px solid var(--amber-line);
   border-left: 4px solid var(--amber-ink);

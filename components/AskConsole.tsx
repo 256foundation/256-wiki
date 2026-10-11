@@ -46,8 +46,56 @@ export default function AskConsole({ anonQuota }: { anonQuota: number }) {
   const [turns, setTurns] = useState<Turn[]>([]);
   const [quotaLeft, setQuotaLeft] = useState<number | null>(null);
   const [tsToken, setTsToken] = useState<string | null>(null);
+  const [me, setMe] = useState<{ signedIn: boolean; name?: string; tier?: string; via?: string } | null>(null);
+  const [providers, setProviders] = useState<{ github: boolean; google: boolean; authentik: boolean; nostr: boolean; devLogin: boolean } | null>(null);
+  const [nostrBusy, setNostrBusy] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const historyRef = useRef<Array<{ role: "user" | "assistant"; content: string }>>([]);
+
+  // who am I / which providers are configured?
+  useEffect(() => {
+    fetch("/api/auth/me").then((r) => r.json()).then(setMe).catch(() => setMe({ signedIn: false }));
+    fetch("/api/auth/providers")
+      .then((r) => r.json())
+      .then((p: { providers: Record<string, boolean> }) =>
+        setProviders({
+          github: Boolean(p.providers.github),
+          google: Boolean(p.providers.google),
+          authentik: Boolean(p.providers.authentik),
+          nostr: Boolean(p.providers.nostr),
+          devLogin: Boolean(p.providers.devLogin),
+        }),
+      )
+      .catch(() => setProviders(null));
+  }, []);
+
+  async function signInWithNostr() {
+    const n = (window as unknown as { nostr?: { signEvent: (e: object) => Promise<Record<string, unknown>> } }).nostr;
+    if (!n || nostrBusy) return;
+    setNostrBusy(true);
+    try {
+      const event = await n.signEvent({
+        kind: 27235,
+        created_at: Math.floor(Date.now() / 1000),
+        tags: [
+          ["u", `${window.location.origin}/api/auth/nostr`],
+          ["method", "POST"],
+        ],
+        content: "",
+      });
+      const res = await fetch("/api/auth/nostr", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ event }),
+      });
+      if (res.ok) window.location.reload();
+      else setTurns((t) => [...t, { kind: "error", message: "Nostr sign-in was rejected — try again or use another provider." }]);
+    } catch {
+      setTurns((t) => [...t, { kind: "error", message: "Nostr extension didn't answer." }]);
+    } finally {
+      setNostrBusy(false);
+    }
+  }
 
   // Turnstile (production): load the script + render the invisible-ish widget
   useEffect(() => {
@@ -145,23 +193,83 @@ export default function AskConsole({ anonQuota }: { anonQuota: number }) {
 
       <div className="askmeta">
         <span className="note">
-          {SITE_KEY
-            ? tsToken
-              ? "✓ verified human"
-              : "complete the check below to ask"
-            : null}
-          {quotaLeft !== null ? ` · ${quotaLeft} free answer${quotaLeft === 1 ? "" : "s"} left today` : ` · ${anonQuota} free answers/day`}
-          {" · "}
+          {me?.signedIn
+            ? `signed in as ${me.name} (${me.tier === "team" ? "unlimited" : "25/day"})`
+            : SITE_KEY
+              ? tsToken
+                ? "✓ verified human"
+                : "complete the check below to ask"
+              : null}
+          {quotaLeft !== null ? ` · ${quotaLeft} free answer${quotaLeft === 1 ? "" : "s"} left today` : me?.signedIn ? "" : ` · ${anonQuota} free answers/day`}
+          {me?.signedIn ? "" : " · "}
           <em>cache hits are always free</em>
+          {me?.signedIn ? (
+            <>
+              {" · "}
+              <a className="signout" href="/api/auth/signout">
+                sign out
+              </a>
+            </>
+          ) : null}
         </span>
         <span className="note hint">⌘↵ to ask</span>
       </div>
+
+      {!me?.signedIn && providers ? <SignInRow providers={providers} onNostr={signInWithNostr} nostrBusy={nostrBusy} /> : null}
 
       {SITE_KEY ? <div id="turnstile-box" className="turnstile" /> : null}
 
       {turns.map((turn, i) => (
         <TurnView key={i} turn={turn} scrubLinks={scrubLinks} />
       ))}
+    </div>
+  );
+}
+
+function SignInRow({
+  providers,
+  onNostr,
+  nostrBusy,
+}: {
+  providers: { github: boolean; google: boolean; authentik: boolean; nostr: boolean; devLogin: boolean };
+  onNostr: () => void;
+  nostrBusy: boolean;
+}) {
+  return (
+    <div className="signinrow">
+      <span className="signinrow-label">
+        Sign in — 25 answers/day, no captcha:{" "}
+      </span>
+      <span className="signinrow-btns">
+        {providers.authentik ? (
+          <a className="signinbtn" href={`/api/auth/start?via=authentik&next=${encodeURIComponent("/ask")}`}>
+            256 Foundation SSO
+          </a>
+        ) : null}
+        {providers.github ? (
+          <a className="signinbtn" href={`/api/auth/start?via=github&next=${encodeURIComponent("/ask")}`}>
+            GitHub
+          </a>
+        ) : null}
+        {providers.google ? (
+          <a className="signinbtn" href={`/api/auth/start?via=google&next=${encodeURIComponent("/ask")}`}>
+            Google
+          </a>
+        ) : null}
+        {providers.nostr ? (
+          <button type="button" className="signinbtn" onClick={onNostr} disabled={nostrBusy}>
+            {nostrBusy ? "waiting for extension…" : "Nostr"}
+          </button>
+        ) : null}
+        {providers.devLogin ? (
+          <a className="signinbtn dev" href="/api/auth/dev-login">
+            dev login
+          </a>
+        ) : null}
+        {!providers.github && !providers.google && !providers.authentik ? (
+          <span className="note">OAuth providers not configured yet — anonymous quota still applies.</span>
+        ) : null}
+      </span>
     </div>
   );
 }

@@ -7,6 +7,8 @@ import { selectStore } from "@/server/store";
 import { handleAsk } from "@/server/ask";
 import { renderAnswerPage, renderNotFound } from "@/server/permalink";
 import { llmConfigured } from "@/server/llm";
+import { authRoutes, currentSession } from "@/server/auth";
+import { subjectKey } from "@/server/session";
 
 /**
  * The runtime API — deployed as one Node Lambda behind CloudFront (infra/).
@@ -19,6 +21,15 @@ export const app = new Hono();
 
 app.use("/api/*", cors());
 app.use("/mcp/*", cors());
+
+// identity (Phase 2 slice C): OAuth2/OIDC + Nostr + sessions
+app.route("/", authRoutes());
+
+app.get("/api/auth/me", (c) => {
+  const session = currentSession(c.req.header("cookie"));
+  if (!session) return c.json({ signedIn: false });
+  return c.json({ signedIn: true, name: session.name, tier: session.tier, via: session.via });
+});
 
 app.get("/api/health", (c) =>
   c.json({
@@ -68,7 +79,11 @@ app.post("/api/ask", async (c) => {
     store,
     searchIndex,
     input,
-    { ip, tier: "anon" }, // signed-in tiers join in the identity slice
+    (() => {
+      const session = currentSession(c.req.header("cookie"));
+      if (session) return { ip, tier: session.tier, identified: true, subjectKey: subjectKey(session.sub) };
+      return { ip, tier: "anon" as const };
+    })(),
   );
   if (!outcome.ok) return c.json(outcome.body, outcome.status as 400 | 403 | 429 | 502 | 503);
   return c.json(outcome.body, 200);

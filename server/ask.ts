@@ -65,25 +65,28 @@ export async function handleAsk(
     history?: Array<{ role: "user" | "assistant"; content: string }>;
     turnstileToken?: string;
   },
-  ctx: { ip: string | null; tier?: string },
+  ctx: { ip: string | null; tier?: string; identified?: boolean; subjectKey?: string },
 ): Promise<AskOutcome> {
   const tier = ctx.tier || "anon";
+  const quotaKey = ctx.identified && ctx.subjectKey ? `${tier}#${ctx.subjectKey}` : `${tier}#${ipHashOf(ctx.ip)}`;
   const question = (input.question ?? "").trim().slice(0, MAX_QUESTION);
   if (!question) {
     return { ok: false, status: 400, body: { error: "empty-question" } };
   }
 
-  // 1. Turnstile (anonymous path; signed-in tiers skip it in slice C)
-  const ts = await verifyTurnstile(input.turnstileToken, ctx.ip);
-  if (!ts.ok) {
-    return { ok: false, status: 403, body: { error: "turnstile-failed", detail: ts.errors ?? [] } };
+  // 1. Turnstile — anonymous path only; identified users skip it
+  if (!ctx.identified) {
+    const ts = await verifyTurnstile(input.turnstileToken, ctx.ip);
+    if (!ts.ok) {
+      return { ok: false, status: 403, body: { error: "turnstile-failed", detail: ts.errors ?? [] } };
+    }
   }
 
   // 2. Answer cache — versioned by pack hash; stale rows regenerate.
   const qhash = qhashOf(question);
   const cached = await store.getAnswer(qhash);
   if (cached && cached.packHash === pack.meta.contentHash && !input.history?.length) {
-    const peeked = await store.peekQuota(`${tier}#${ipHashOf(ctx.ip)}`, dayKey());
+    const peeked = await store.peekQuota(quotaKey, dayKey());
     return {
       ok: true,
       body: {
@@ -130,7 +133,7 @@ export async function handleAsk(
       createdAt: new Date().toISOString(),
       expiresAt: Math.floor(Date.now() / 1000) + 180 * 86400,
     });
-    const peeked = await store.peekQuota(`${tier}#${ipHashOf(ctx.ip)}`, dayKey());
+    const peeked = await store.peekQuota(quotaKey, dayKey());
     return {
       ok: true,
       body: {
@@ -150,7 +153,7 @@ export async function handleAsk(
   }
 
   // 5. Quota — one per generated answer (cache hits and gaps skip this)
-  const used = await store.bumpQuota(`${tier}#${ipHashOf(ctx.ip)}`, dayKey(), quotaLimitFor(tier));
+  const used = await store.bumpQuota(quotaKey, dayKey(), quotaLimitFor(tier));
   if (used === null) {
     return {
       ok: false,
