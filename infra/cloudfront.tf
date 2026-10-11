@@ -1,7 +1,7 @@
 # CloudFront: every read path is edge-cached; the Lambda only sees writes and
 # dynamic GETs. Routing:
 #   default                  → S3 (site/, trailing-slash rewrite via CF function)
-#   /api/index.json, /api/pages/*, /api/feed.xml, /api/gaps.json → S3 (prebuilt)
+#   /api/index.json, /api/pages/*, /api/feed.xml → S3 (prebuilt)
 #   /api/search*, /api/live.json, /api/ask, /api/suggest, /mcp, /a/* → Lambda
 # Pack for site builds is pulled from GitHub releases at CI time; S3 pack/ is
 # the runtime copy the Lambda retrieves from.
@@ -209,7 +209,7 @@ resource "aws_cloudfront_distribution" "site" {
 
   ordered_cache_behavior {
     path_pattern               = "/api/gaps.json"
-    target_origin_id           = "s3-static"
+    target_origin_id           = "lambda-api"
     viewer_protocol_policy     = "redirect-to-https"
     allowed_methods            = ["GET", "HEAD", "OPTIONS"]
     cached_methods             = ["GET", "HEAD"]

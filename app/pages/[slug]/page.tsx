@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { loadPack } from "@/lib/pack-loader";
-import { isDisputed, isOutdated, rawLinkUrl, pageEditUrl, type PackPage } from "@/lib/pack";
+import { isDisputed, isOutdated, pod256Episodes, rawLinkUrl, pageEditUrl, type PackPage } from "@/lib/pack";
 import { splitStatusBlocks, wikiMarkdown } from "@/lib/epistemics";
 
 export const dynamicParams = false;
@@ -102,8 +102,27 @@ function Markdown({ markdown, topic }: { markdown: string; topic: string }) {
 }
 
 function Provenance({ page, bySlug }: { page: PackPage; bySlug: Map<string, PackPage> }) {
+  const pod256 = pod256Episodes(page);
   return (
     <div className="provenance">
+      {pod256.length > 0 && (
+        <div className="pod256">
+          <h3>POD256 episodes</h3>
+          <div className="backlinks">
+            {pod256.map((e) => (
+              <a
+                key={e.episode}
+                className="backlink-chip pod256-chip"
+                href="https://256foundation.org/"
+                title="POD256 — the 256 Foundation podcast (episode link pattern pending)"
+              >
+                🎙 POD256 {e.episode}
+                {e.date ? ` · ${e.date}` : ""}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
       <h3>Sources</h3>
       <ul>
         {page.sources.length ? (

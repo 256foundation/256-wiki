@@ -10,6 +10,7 @@ import { llmConfigured } from "@/server/llm";
 import { authRoutes, currentSession } from "@/server/auth";
 import { subjectKey } from "@/server/session";
 import { mcpRoutes } from "@/server/mcp";
+import { clusterGaps } from "@/server/gaps";
 
 /**
  * The runtime API — deployed as one Node Lambda behind CloudFront (infra/).
@@ -118,6 +119,24 @@ app.get("/a/:id", async (c) => {
   return c.html(renderAnswerPage(row), {
     headers: { "Cache-Control": "public, max-age=3600" },
   });
+});
+
+// public unanswered-questions board — clustered from the query log (Phase 4)
+app.get("/api/gaps.json", async (c) => {
+  const rows = await store.recentGaps(500);
+  const clusters = clusterGaps(rows);
+  return c.json(
+    {
+      meta: {
+        packHash: pack.meta.contentHash,
+        updated: new Date().toISOString(),
+        note: "questions the brain couldn't ground — clustered by identical normalized question; top of the list becomes the next ingest target",
+      },
+      stats: { gapAsks: rows.length, distinctGaps: clusters.length },
+      gaps: clusters.slice(0, 50),
+    },
+    { headers: { "Cache-Control": "public, max-age=60" } },
+  );
 });
 
 app.post("/api/suggest", (c) =>

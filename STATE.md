@@ -6,7 +6,7 @@
 
 ## Current status
 
-**Phase 0 + 1 + 2 (slices A–C) complete. Phase 3 agent surface complete: MCP streamable HTTP (real-client handshake verified), /SKILL.md, /llms.txt, static topic/pack routes, README quickstarts. Next: Phase 4 — gaps board from query log, gap-report wiring, POD256 integration.**
+**Phase 0 + 1 + 2 + 3 complete. Phase 4 loops complete in code + dev-verified: live gaps board (query-log clustering), weekly gap-report workflow, POD256 episode chips. All planned site phases now built — remaining work is the launch checklist (privacy page, alarms, load test, abuse review) which needs Tyler's AWS dev-environment pass.**
 
 ## Done
 
@@ -20,7 +20,8 @@
 | 2026-10-11 | Phase 2 slice A — BM25 retrieval + real `/api/search` | f2dc1bd | lib/retrieval.ts (chunked BM25 + boosts + snippets, pure TS); pack bundled into Lambda (772KB zip); verified vs 127-page pack; 11 retrieval tests |
 | 2026-10-11 | Phase 2 slice B — ask pipeline: LLM adapter, store (Dynamo+memory), quotas, cache, breaker, query log, `/a/<id>` permalinks, `/ask` chat UI | eff423b | Verified E2E in dev vs mock LLM (scripts/mock-llm.mjs): answer+citations, cache hit free, gap answers free + logged, quota 429, breaker 429, permalink HTML w/ OG + As-Of sources; 34/34 tests; browser-verified desktop+mobile (docs/screens/ask-*.jpg, permalink-desktop.jpg); CI green |
 | 2026-10-11 | Phase 2 slice C — identity: HMAC-signed session cookies, OAuth2 GitHub + OIDC Google/Authentik (jose), NIP-98 Nostr (@noble), dev-login, signed-in quota tier + Turnstile skip | b70f8fa | Verified live: dev-login → cookie → /api/auth/me; identified ask draws 25/day bucket w/o captcha; real NIP-98 event signed w/ noble + accepted. Provider buttons render per configured credentials; `/api/auth/providers` self-describes; 44/44 tests; CI green |
-| 2026-10-11 | Phase 3 — agent surface: MCP streamable HTTP (`/mcp`), `/SKILL.md`, `/llms.txt`, static `/api/list/topics.json` + `/api/pack.json`, README quickstarts | (this commit) | MCP: initialize/tools×4/resources/notifications per JSON-RPC 2.0 (session id on init); **real-client verified: `claude mcp list` → ✔ Connected**; full headless E2E deferred (Tyler's Claude auth expired). SKILL.md teaches the query→fetch→cite loop; llms.txt indexes the site. 53/53 tests incl. 9 protocol tests |
+| 2026-10-11 | Phase 3 — agent surface: MCP streamable HTTP (`/mcp`), `/SKILL.md`, `/llms.txt`, static `/api/list/topics.json` + `/api/pack.json`, README quickstarts | 6f0c01e | MCP: initialize/tools×4/resources/notifications per JSON-RPC 2.0 (session id on init); **real-client verified: `claude mcp list` → ✔ Connected**; full headless E2E deferred (Tyler's Claude auth expired). SKILL.md teaches the query→fetch→cite loop; llms.txt indexes the site. 53/53 tests incl. 9 protocol tests |
+| 2026-10-11 | Phase 4 — loops: live `/gaps` board (query-log clustering, Lambda `/api/gaps.json` 60s cache, CF behavior flipped to lambda-api), POD256 episode chips on citing pages (18 parsed on hashrate-heating-economics), weekly gap-report workflow (`gap-report.yml` → content-repo issue) | (this commit) | Board verified live in dev (seeded 3 gaps through the real pipeline); empty + failure states handled; clustering = exact-normalized qhash (semantic clustering is a later upgrade). POD256 chips parsed from raw capture paths, link to foundation site pending canonical episode URLs. CROSS_REPO_TOKEN secret needed for the weekly issue filing |
 
 ## In progress
 
@@ -36,7 +37,8 @@
 6. ~~Phase 2 slice B — ask pipeline (LLM, quotas, cache, breaker, permalinks, chat UI)~~ ✅
 7. ~~Phase 2 slice C — identity (GitHub/Google/Authentik OIDC + Nostr NIP-07, signed sessions, 25/day tier, Turnstile skip)~~ ✅ code+dev-verified; OAuth buttons light up when Tyler provisions credentials
 8. ~~Phase 3 — agent surface (MCP streamable HTTP, SKILL.md, llms.txt, README quickstarts, permalink OG)~~ ✅
-9. Phase 4 — gaps board from query log (`/api/gaps.json` + /gaps client fetch), weekly gap-report automation wiring, POD256 integration
+9. ~~Phase 4 — gaps board from query log (`/api/gaps.json` + /gaps client fetch), weekly gap-report automation wiring, POD256 integration~~ ✅ code+dev-verified; weekly issue filing needs CROSS_REPO_TOKEN secret
+10. Launch checklist — privacy page (static, can build now) · CloudWatch alarms + budget alarm (terraform, write+validate) · load-test quota paths + abuse review (needs AWS dev env) · DNS/cert (needs AWS)
 
 ## Decisions / deviations
 

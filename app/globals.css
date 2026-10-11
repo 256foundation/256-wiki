@@ -369,6 +369,34 @@ h1.title { font-size: clamp(26px, 4.5vw, 34px); letter-spacing: -0.025em; margin
 .signinbtn.dev { font-family: var(--mono); font-weight: 400; color: var(--ink-3); }
 .signout { color: var(--ink-3); }
 
+/* gaps board */
+.gapsboard { margin: 22px 0; }
+.gapsboard.empty {
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  background: var(--paper-2);
+  padding: 20px 22px;
+}
+.gaplist { list-style: none; margin: 14px 0; padding: 0; }
+.gaprow {
+  display: flex; gap: 14px; align-items: baseline;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  padding: 12px 16px;
+  margin: 10px 0;
+}
+.gapcount {
+  font-family: var(--mono); font-weight: 700; color: var(--orange);
+  min-width: 34px; text-align: right;
+}
+.gapmain { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.gapq { font-weight: 600; }
+.gapmeta { font-size: 12.5px; }
+
+/* POD256 episode chips (podcast as primary source) */
+.pod256-chip { background: var(--amber-bg); border-color: var(--amber-line); }
+
 .askmsg {
   border: 1px solid var(--amber-line);
   border-left: 4px solid var(--amber-ink);

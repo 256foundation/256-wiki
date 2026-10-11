@@ -51,6 +51,8 @@ export interface Store {
   getAnswerById(answerId: string): Promise<AnswerRow | null>;
   putAnswer(row: AnswerRow): Promise<void>;
   logQuery(row: QueryLogRow): Promise<void>;
+  /** most recent gap rows (model "none") for the public board — newest first */
+  recentGaps(limit: number): Promise<QueryLogRow[]>;
   bumpBudget(day: string, tokens: number, cap: number): Promise<{ total: number; tripped: boolean }>;
   getBudget(day: string): Promise<number>;
 }
@@ -120,6 +122,12 @@ export function memoryStore(): MemoryStore {
       logRows.push(row);
       if (logRows.length > 5000) logRows.splice(0, 1000);
     },
+    async recentGaps(limit) {
+      return logRows
+        .filter((r) => r.model === "none" && !r.cached)
+        .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+        .slice(0, limit);
+    },
     async bumpBudget(day, tokens, cap) {
       const total = (budgets.get(day) ?? 0) + tokens;
       budgets.set(day, total);
@@ -135,7 +143,7 @@ export function memoryStore(): MemoryStore {
 
 export function dynamoStore(): Store {
   const { DynamoDBClient } = require("@aws-sdk/client-dynamodb") as typeof import("@aws-sdk/client-dynamodb");
-  const { DynamoDBDocumentClient, UpdateCommand } = require("@aws-sdk/lib-dynamodb") as typeof import("@aws-sdk/lib-dynamodb");
+  const { DynamoDBDocumentClient, UpdateCommand, ScanCommand } = require("@aws-sdk/lib-dynamodb") as typeof import("@aws-sdk/lib-dynamodb");
 
   const doc: DynamoDBDocumentClient = DynamoDBDocumentClient.from(
     new DynamoDBClient({ region: process.env.AWS_REGION || "us-east-1" }),
@@ -191,6 +199,22 @@ export function dynamoStore(): Store {
       await doc.send(
         PutCommandSafe(QUERYLOG, { ...row, expiresAt: row.expiresAt || ttlFromNow(LOG_TTL_DAYS) }),
       );
+    },
+    async recentGaps(limit) {
+      // v1 scale (low ask volume): one filtered Scan, no pagination. If the log
+      // outgrows this (~10k+ rows/day), add a model-indexed GSI — noted in infra.
+      const out = await doc.send(
+        new ScanCommand({
+          TableName: QUERYLOG,
+          FilterExpression: "#m = :none",
+          ExpressionAttributeNames: { "#m": "model" },
+          ExpressionAttributeValues: { ":none": "none" },
+          Limit: Math.max(limit, 1000),
+        }),
+      );
+      return ((out.Items as QueryLogRow[]) ?? [])
+        .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+        .slice(0, limit);
     },
     async bumpBudget(day, tokens, cap) {
       try {

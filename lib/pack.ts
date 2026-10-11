@@ -71,6 +71,22 @@ export function rawLinkUrl(rawLink: string): string {
   return `https://github.com/256foundation/public-mining-brain/blob/main/${rawLink}`;
 }
 
+/** POD256 podcast episodes a page draws on — parsed from raw capture paths
+ * (…/pod256/…/2025-08-20-e081.md → episode e081, aired 2025-08-20). Rendered
+ * as first-class chips: the podcast is a primary source, not a footnote. */
+export function pod256Episodes(page: Pick<PackPage, "sources" | "rawLinks">): Array<{ episode: string; date: string | null }> {
+  const episodes = new Map<string, string | null>();
+  for (const raw of page.rawLinks) {
+    const m = /pod256\/.*(\d{4}-\d{2}-\d{2})-e(\d+)\.md$/i.exec(raw);
+    if (m) episodes.set(`e${m[2]}`, m[1]);
+  }
+  // POD256 cited as a source but no parseable episode path yet → generic chip
+  if (!episodes.size && page.sources.some((s) => /pod256/i.test(s))) {
+    episodes.set("podcast", null);
+  }
+  return [...episodes.entries()].map(([episode, date]) => ({ episode, date }));
+}
+
 export function pageEditUrl(page: Pick<PackPage, "topic" | "slug">): string {
   return `https://github.com/256foundation/public-mining-brain/blob/main/wiki/${page.topic}/${page.slug}.md`;
 }

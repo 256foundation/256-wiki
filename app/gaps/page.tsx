@@ -1,32 +1,26 @@
-export const metadata = { title: "Gaps — what the brain doesn't know" };
+import type { Metadata } from "next";
+import GapsBoard from "@/components/GapsBoard";
+
+export const metadata: Metadata = {
+  title: "Gaps — what the brain doesn't know",
+  description:
+    "Questions people asked that the 256 Foundation Public Mining Brain couldn't ground. Curation is visible: top gaps become next week's ingest targets.",
+};
 
 export default function GapsPage() {
   return (
     <div className="wrap simple">
       <h1>Open gaps</h1>
       <p className="summary">
-        Questions people asked that the brain couldn't answer (or answered shakily). Curation is
-        visible here: gaps become next week's ingest targets.
+        Questions people asked that the brain couldn&apos;t answer. Curation is visible here:
+        gaps become next week&apos;s ingest targets, highest demand first.
       </p>
 
-      <div className="ask-shell">
-        <p>
-          <strong>The board lights up with the Phase 2/4 deploys.</strong> Every question the chat
-          can't answer lands in the query log; a weekly job clusters them and files a{" "}
-          <a href="https://github.com/256foundation/public-mining-brain/issues?q=label%3Acontent-gap">
-            content-gap report issue
-          </a>{" "}
-          on the content repo.
-        </p>
-        <p className="note">
-          Planned shape: “<em>N people asked this — the brain doesn't know yet</em>”, with a
-          suggest-a-source CTA per gap.
-        </p>
-      </div>
+      <GapsBoard />
 
       <h2>Know a source that would close a gap?</h2>
       <p>
-        Don't wait for the board — <a href="/contribute">suggest the source now</a>. Ingestion is
+        Don&apos;t wait for the board — <a href="/contribute">suggest the source now</a>. Ingestion is
         PR-based and open to everyone.
       </p>
     </div>

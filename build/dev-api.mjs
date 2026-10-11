@@ -52737,6 +52737,9 @@ function memoryStore() {
       logRows.push(row);
       if (logRows.length > 5e3) logRows.splice(0, 1e3);
     },
+    async recentGaps(limit) {
+      return logRows.filter((r5) => r5.model === "none" && !r5.cached).sort((a5, b5) => b5.createdAt.localeCompare(a5.createdAt)).slice(0, limit);
+    },
     async bumpBudget(day, tokens, cap) {
       const total = (budgets.get(day) ?? 0) + tokens;
       budgets.set(day, total);
@@ -52749,7 +52752,7 @@ function memoryStore() {
 }
 function dynamoStore() {
   const { DynamoDBClient } = require_dist_cjs19();
-  const { DynamoDBDocumentClient, UpdateCommand } = require_dist_cjs21();
+  const { DynamoDBDocumentClient, UpdateCommand, ScanCommand } = require_dist_cjs21();
   const doc = DynamoDBDocumentClient.from(
     new DynamoDBClient({ region: process.env.AWS_REGION || "us-east-1" })
   );
@@ -52800,6 +52803,18 @@ function dynamoStore() {
       await doc.send(
         PutCommandSafe(QUERYLOG, { ...row, expiresAt: row.expiresAt || ttlFromNow(LOG_TTL_DAYS) })
       );
+    },
+    async recentGaps(limit) {
+      const out = await doc.send(
+        new ScanCommand({
+          TableName: QUERYLOG,
+          FilterExpression: "#m = :none",
+          ExpressionAttributeNames: { "#m": "model" },
+          ExpressionAttributeValues: { ":none": "none" },
+          Limit: Math.max(limit, 1e3)
+        })
+      );
+      return (out.Items ?? []).sort((a5, b5) => b5.createdAt.localeCompare(a5.createdAt)).slice(0, limit);
     },
     async bumpBudget(day, tokens, cap) {
       try {
@@ -56477,6 +56492,37 @@ function mcpRoutes() {
   return mcp;
 }
 
+// server/gaps.ts
+function isGapRow(row) {
+  return row.model === "none" && !row.cached;
+}
+function clusterGaps(rows) {
+  const byQhash = /* @__PURE__ */ new Map();
+  for (const row of rows) {
+    if (!isGapRow(row)) continue;
+    const existing = byQhash.get(row.qhash);
+    if (!existing) {
+      byQhash.set(row.qhash, {
+        qhash: row.qhash,
+        question: row.question,
+        count: 1,
+        firstAskedAt: row.createdAt,
+        lastAskedAt: row.createdAt
+      });
+      continue;
+    }
+    existing.count += 1;
+    if (row.createdAt > existing.lastAskedAt) {
+      existing.lastAskedAt = row.createdAt;
+      existing.question = row.question;
+    }
+    if (row.createdAt < existing.firstAskedAt) existing.firstAskedAt = row.createdAt;
+  }
+  return [...byQhash.values()].sort(
+    (a5, b5) => b5.count - a5.count || b5.lastAskedAt.localeCompare(a5.lastAskedAt)
+  );
+}
+
 // server/app.ts
 var app = new Hono3();
 app.use("/api/*", cors());
@@ -56562,6 +56608,22 @@ app.get("/a/:id", async (c5) => {
   return c5.html(renderAnswerPage(row), {
     headers: { "Cache-Control": "public, max-age=3600" }
   });
+});
+app.get("/api/gaps.json", async (c5) => {
+  const rows = await store.recentGaps(500);
+  const clusters = clusterGaps(rows);
+  return c5.json(
+    {
+      meta: {
+        packHash: pack.meta.contentHash,
+        updated: (/* @__PURE__ */ new Date()).toISOString(),
+        note: "questions the brain couldn't ground \u2014 clustered by identical normalized question; top of the list becomes the next ingest target"
+      },
+      stats: { gapAsks: rows.length, distinctGaps: clusters.length },
+      gaps: clusters.slice(0, 50)
+    },
+    { headers: { "Cache-Control": "public, max-age=60" } }
+  );
 });
 app.post(
   "/api/suggest",
