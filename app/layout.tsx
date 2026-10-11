@@ -70,7 +70,8 @@ function SiteFooter() {
           </div>
           <div>
             <a href="/llms.txt">llms.txt</a> · <a href="/SKILL.md">SKILL.md</a> ·{" "}
-            <a href="/api/feed.xml">RSS</a> · <a href="https://256foundation.org">256foundation.org</a>
+            <a href="/privacy">privacy</a> · <a href="/api/feed.xml">RSS</a> ·{" "}
+            <a href="https://256foundation.org">256foundation.org</a>
           </div>
         </div>
         <p className="note" style={{ marginTop: 18 }}>

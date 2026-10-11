@@ -369,6 +369,18 @@ h1.title { font-size: clamp(26px, 4.5vw, 34px); letter-spacing: -0.025em; margin
 .signinbtn.dev { font-family: var(--mono); font-weight: 400; color: var(--ink-3); }
 .signout { color: var(--ink-3); }
 
+/* privacy page */
+.privacylist { margin: 20px 0; }
+.privacyrow {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  padding: 14px 18px;
+  margin: 10px 0;
+}
+.privacyrow dt { font-weight: 700; margin-bottom: 4px; }
+.privacyrow dd { margin: 0; color: var(--ink-2); }
+
 /* gaps board */
 .gapsboard { margin: 22px 0; }
 .gapsboard.empty {

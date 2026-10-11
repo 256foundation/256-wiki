@@ -21,7 +21,8 @@
 | 2026-10-11 | Phase 2 slice B — ask pipeline: LLM adapter, store (Dynamo+memory), quotas, cache, breaker, query log, `/a/<id>` permalinks, `/ask` chat UI | eff423b | Verified E2E in dev vs mock LLM (scripts/mock-llm.mjs): answer+citations, cache hit free, gap answers free + logged, quota 429, breaker 429, permalink HTML w/ OG + As-Of sources; 34/34 tests; browser-verified desktop+mobile (docs/screens/ask-*.jpg, permalink-desktop.jpg); CI green |
 | 2026-10-11 | Phase 2 slice C — identity: HMAC-signed session cookies, OAuth2 GitHub + OIDC Google/Authentik (jose), NIP-98 Nostr (@noble), dev-login, signed-in quota tier + Turnstile skip | b70f8fa | Verified live: dev-login → cookie → /api/auth/me; identified ask draws 25/day bucket w/o captcha; real NIP-98 event signed w/ noble + accepted. Provider buttons render per configured credentials; `/api/auth/providers` self-describes; 44/44 tests; CI green |
 | 2026-10-11 | Phase 3 — agent surface: MCP streamable HTTP (`/mcp`), `/SKILL.md`, `/llms.txt`, static `/api/list/topics.json` + `/api/pack.json`, README quickstarts | 6f0c01e | MCP: initialize/tools×4/resources/notifications per JSON-RPC 2.0 (session id on init); **real-client verified: `claude mcp list` → ✔ Connected**; full headless E2E deferred (Tyler's Claude auth expired). SKILL.md teaches the query→fetch→cite loop; llms.txt indexes the site. 53/53 tests incl. 9 protocol tests |
-| 2026-10-11 | Phase 4 — loops: live `/gaps` board (query-log clustering, Lambda `/api/gaps.json` 60s cache, CF behavior flipped to lambda-api), POD256 episode chips on citing pages (18 parsed on hashrate-heating-economics), weekly gap-report workflow (`gap-report.yml` → content-repo issue) | (this commit) | Board verified live in dev (seeded 3 gaps through the real pipeline); empty + failure states handled; clustering = exact-normalized qhash (semantic clustering is a later upgrade). POD256 chips parsed from raw capture paths, link to foundation site pending canonical episode URLs. CROSS_REPO_TOKEN secret needed for the weekly issue filing |
+| 2026-10-11 | Phase 4 — loops: live `/gaps` board (query-log clustering, Lambda `/api/gaps.json` 60s cache, CF behavior flipped to lambda-api), POD256 episode chips on citing pages (18 parsed on hashrate-heating-economics), weekly gap-report workflow (`gap-report.yml` → content-repo issue) | 843f01f | Board verified live in dev (seeded 3 gaps through the real pipeline); empty + failure states handled; clustering = exact-normalized qhash (semantic clustering is a later upgrade). POD256 chips parsed from raw capture paths, link to foundation site pending canonical episode URLs. CROSS_REPO_TOKEN secret needed for the weekly issue filing |
+| 2026-10-11 | Launch checklist — `/privacy` page (complete data inventory, footer link), MCP tests made pack-agnostic (CI runs the 6-page sample until pack-v* releases) | c41ba90 | Privacy page copy verified against actual code (ipHashOf, subjectKey HMAC, TTLs, Turnstile skip); browser-verified desktop. CI green after fix; the two red runs were the pack-size assumption |
 
 ## In progress
 
@@ -38,7 +39,7 @@
 7. ~~Phase 2 slice C — identity (GitHub/Google/Authentik OIDC + Nostr NIP-07, signed sessions, 25/day tier, Turnstile skip)~~ ✅ code+dev-verified; OAuth buttons light up when Tyler provisions credentials
 8. ~~Phase 3 — agent surface (MCP streamable HTTP, SKILL.md, llms.txt, README quickstarts, permalink OG)~~ ✅
 9. ~~Phase 4 — gaps board from query log (`/api/gaps.json` + /gaps client fetch), weekly gap-report automation wiring, POD256 integration~~ ✅ code+dev-verified; weekly issue filing needs CROSS_REPO_TOKEN secret
-10. Launch checklist — privacy page (static, can build now) · CloudWatch alarms + budget alarm (terraform, write+validate) · load-test quota paths + abuse review (needs AWS dev env) · DNS/cert (needs AWS)
+10. Launch checklist — ~~privacy page~~ ✅ · ~~CloudWatch alarms + budget alarm~~ ✅ (built in Phase 0, observability.tf) · load-test quota paths + suggestion-form abuse review + DNS/cert (all need Tyler's AWS dev-env pass)
 
 ## Decisions / deviations
 
@@ -66,7 +67,7 @@
 | 3 | Cloudflare Turnstile | `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET` (site+secret pair) | Provision for Phase 2 — until then ask runs with verification skipped (dev bypass, flagged in response) |
 | 4 | Authentik OIDC client | `AUTHENTIK_CLIENT_ID/SECRET`, `AUTHENTIK_ISSUER_URL`, team group claim (plan §9.3) | Provision for Phase 2 slice C |
 | 5 | GitHub OAuth app + Google OAuth client | `GITHUB_CLIENT_ID/SECRET`, `GOOGLE_CLIENT_ID/SECRET` | Provision for Phase 2 slice C |
-| 6 | GitHub token (issue filing) | `GITHUB_TOKEN` (repo scope on public-mining-brain) | Needed for Phase 4 gap automation |
+| 6 | GitHub token (issue filing) | `CROSS_REPO_TOKEN` repo secret on 256-wiki (PAT with issues:write on public-mining-brain) | Needed for the weekly `content-gap-report` workflow (in repo, cron Mondays) |
 | 7 | public-mining-brain PR #1 review/merge | https://github.com/256foundation/public-mining-brain/pull/1 | Blocks pack-release flow (site build falls back to a vendored pack meanwhile) |
 
 Infra agent handoff (apply steps, DNS row, secrets list, alarm destination) — final copy in the section below before launch.
