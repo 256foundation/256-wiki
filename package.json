@@ -1,0 +1,39 @@
+{
+  "name": "256-wiki",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Public front end for the 256 Foundation's Public Mining Brain — wiki.256foundation.org",
+  "scripts": {
+    "dev": "next dev",
+    "dev:api": "esbuild server/dev-server.ts --bundle --platform=node --format=esm --outfile=build/dev-api.mjs --log-level=warning && node build/dev-api.mjs",
+    "fetch:pack": "node scripts/fetch-pack.mjs",
+    "build": "npm run fetch:pack && next build",
+    "postbuild": "npx --yes pagefind --site out || echo 'pagefind skipped (search index optional)'",
+    "build:lambda": "npm run fetch:pack && node scripts/build-lambda.mjs",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.1.4",
+    "hono": "^4.6.0",
+    "marked": "^14.1.0",
+    "next": "^15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "esbuild": "^0.24.0",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^15.0.0",
+    "pagefind": "^1.1.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,64 @@
+name: CI
+
+# Build, lint, test, validate — no AWS secrets in CI (plan §3: deploys are the
+# infra agent's APPLY=1 run, not CI).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  site:
+    name: build / lint / test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build (static export + Pagefind)
+        run: npm run build
+
+      - name: Lambda bundle builds
+        run: npm run build:lambda
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site-export
+          path: out/
+          retention-days: 7
+
+  infra:
+    name: terraform fmt + validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~1.9"
+
+      - name: fmt check
+        run: terraform -chdir=infra fmt -check -recursive
+
+      - name: init (no backend)
+        run: terraform -chdir=infra init -backend=false -input=false
+
+      - name: validate
+        run: terraform -chdir=infra validate

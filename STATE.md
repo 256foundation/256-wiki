@@ -6,7 +6,7 @@
 
 ## Current status
 
-**Phase 0.1 + 0.2 complete. 0.3 (infra) in progress.**
+**Phase 0 complete (0.1–0.4). Next: Phase 1 — read-only site depth (Pagefind UI wiring, epistemics edge cases), then Phase 2 ask pipeline.**
 
 ## Done
 
@@ -15,17 +15,18 @@
 | 2026-10-11 | Repo scaffold: git init, remote, README, LICENSE (MIT+note), .gitignore, .env.example, STATE.md | 318ca8f | public-mining-brain has no LICENSE file → MIT for code, provenance note for content |
 | 2026-10-11 | `scripts/build_export.py` + pack-release CI + content-gap-report template | [public-mining-brain#1](https://github.com/256foundation/public-mining-brain/pull/1) | Schema v1 verified on live wiki: 127 pages, 11 topics, 0 lint errors; `--check` deterministic; release tag `pack-v<date>.<shorthash>`; awaiting human review/merge |
 | 2026-10-11 | `infra/` Terraform module complete | 17809c3 | `terraform fmt -check` + `validate` green. **`make plan` blocked: no AWS creds on this machine** (no ~/.aws, no env) — needs Tyler |
+| 2026-10-11 | Next.js scaffold + CI | (this commit) | Static export builds 146 pages from the pack; Pagefind index (21k words); lint+typecheck+12 tests green; verified in browser desktop+mobile (docs/screens/); /api/live.json proxy serves real pool+mempool data |
 
 ## In progress
 
-- Phase 0.4 — Next.js scaffold + CI.
+- (nothing — Phase 1 next)
 
 ## Next queue (plan §7)
 
 1. ~~Phase 0.2 — build_export.py PR into public-mining-brain~~ ✅ PR #1 open
 2. ~~Phase 0.3 — `infra/` Terraform~~ ✅ validate green; plan blocked on AWS creds
-3. Phase 0.4 — Next.js scaffold: static export, pack fetch from GitHub release, CI (build/lint/test, no AWS secrets)
-4. Phase 1 — read-only site (epistemics UI, Pagefind, live strip, RSS, about/contribute)
+3. ~~Phase 0.4 — Next.js scaffold + CI~~ ✅
+4. Phase 1 — read-only site depth: Pagefind UI wired into header/search page, epistemics edge cases (status blocks mid-list, tables), OG meta, 404, feed polish
 5. Phase 2 — ask pipeline (retrieval, LLM adapter, chat, Turnstile, identity, quotas, cache, permalinks, query log, breaker)
 6. Phase 3 — agent surface (REST, MCP, SKILL.md, llms.txt, README quickstarts, OG tags)
 7. Phase 4 — gap report automation, /gaps board, POD256 integration
@@ -36,6 +37,9 @@
 |---|---|
 | MIT license + content provenance note | public-mining-brain carries no LICENSE file; mission says match it, else MIT+note |
 | Single Lambda app (Hono) serving `/api/*` + `/mcp` instead of per-route Lambdas | Cost/simplicity at v1 traffic; split later only if cold-start or error isolation demands it |
+| Pure-JS BM25 planned for retrieval instead of SQLite FTS5 | No native deps in Lambda; `node:sqlite` absent on local Node 20; same `retrieve(q)` interface — embeddings stay a later drop-in (plan §3 allows) |
+| `/a/<id>` permalinks will render from the Lambda (HTML template), not Next SSR | Static export can't SSR; Lambda behind CloudFront renders permalink HTML w/ OG tags — same URL space |
+| Wiki-body renderer escapes lone `~` and digit`*`digit before marked | GFM strikethrough/emphasis was mangling verbatim spec values (`20~50 ℃`, `339*173*207 mm`) — grounding fidelity beats markdown cleverness |
 | (more recorded as made) | |
 
 ## Blockers / Needs Tyler
