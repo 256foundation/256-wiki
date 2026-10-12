@@ -49,10 +49,18 @@ function SiteHeader() {
     <header className="site-header">
       <div className="bar">
         <Link href="/" className="brand" aria-label="256 Foundation — Mining Brain, home">
-          <span className="brand-top">256 Foundation</span>
-          <span className="brand-main">
-            Mining <em>Brain</em>
-          </span>
+          <picture className="brand-logo">
+            {/* dark scheme → white artwork; light scheme → dark artwork */}
+            <source media="(prefers-color-scheme: dark)" srcSet="/logos/256-logo-secondary-light.png" />
+            <img
+              src="/logos/256-logo-secondary-dark.png"
+              alt="256 Foundation"
+              width={100}
+              height={32}
+              style={{ height: 32, width: "auto", display: "block" }}
+            />
+          </picture>
+          <span className="brand-main">Mining Brain</span>
         </Link>
         <nav>
           <a href="/ask">Ask</a>

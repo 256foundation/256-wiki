@@ -299,32 +299,36 @@ function TurnView({ turn, scrubLinks }: { turn: Turn; scrubLinks: (el: HTMLEleme
   const gap = turn.kind === "gap";
   return (
     <div className={`askanswer${gap ? " gap" : ""}`}>
-      <div className="anshead">
-        {gap ? <span className="badge disputed">gap logged</span> : null}
-        {d.cached ? <span className="badge asof">cache hit — free</span> : null}
+      <div className="panelhead">
+        <span className="eyebrow">{gap ? "Open gap" : "Grounded answer"}</span>
+        <span className="panelstatus">
+          {gap ? <span className="badge disputed">gap logged</span> : null}
+          {d.cached ? <span className="badge asof">cache hit — free</span> : null}
+          <CopyButton text={`https://wiki.256foundation.org${d.permalink}`} />
+        </span>
       </div>
-      <div
-        className="article answerview"
-        ref={(el) => scrubLinks(el)}
-        dangerouslySetInnerHTML={{ __html: d.answerHtml }}
-      />
-      {d.citations.length ? (
-        <div className="anscites">
-          <span className="anscites-label">Sources</span>
-          {d.citations.map((c) => (
-            <a key={c.slug} className="backlink-chip" href={`/pages/${c.slug}/`}>
-              {c.title}
-              {c.asOf ? <span className="cite-asof"> · As-Of {c.asOf}</span> : null}
-            </a>
-          ))}
-        </div>
-      ) : null}
-      <div className="ansfoot">
-        <a className="permalink" href={d.permalink}>
-          ¶ permalink
-        </a>
-        <CopyButton text={`https://wiki.256foundation.org${d.permalink}`} />
+      <div className="panelbody">
+        <div
+          className="article answerview"
+          ref={(el) => scrubLinks(el)}
+          dangerouslySetInnerHTML={{ __html: d.answerHtml }}
+        />
+        {d.citations.length ? (
+          <div className="anscites">
+            <span className="anscites-label">Sources</span>
+            {d.citations.map((c) => (
+              <a key={c.slug} className="backlink-chip" href={`/pages/${c.slug}/`}>
+                {c.title}
+                {c.asOf ? <span className="cite-asof"> · As-Of {c.asOf}</span> : null}
+              </a>
+            ))}
+          </div>
+        ) : null}
       </div>
+      <a className="panelfoot" href={d.permalink}>
+        <span>Permalink · {d.permalink.slice(3, 11)}</span>
+        <span aria-hidden="true">→</span>
+      </a>
     </div>
   );
 }

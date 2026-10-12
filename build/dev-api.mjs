@@ -55228,7 +55228,7 @@ h1 {
   font-size: clamp(26px, 5vw, 36px); line-height: 1.12; margin: 0 0 18px;
 }
 .answer, .cites, footer {
-  background: var(--paper-2); border: 1px solid var(--line); border-radius: 12px;
+  background: var(--paper-2); border: 1px solid var(--line); border-radius: 0;
   padding: 20px 22px; margin: 18px 0;
 }
 .cites h2 {
@@ -55240,14 +55240,14 @@ h1 {
 .cites a { color: var(--accent); }
 .cites .asof {
   font-family: var(--mono); font-size: 11.5px; color: var(--blue-ink);
-  background: var(--blue-bg); border-radius: 999px; padding: 1px 8px; margin-left: 4px;
+  background: var(--blue-bg); border-radius: 0; padding: 1px 8px; margin-left: 4px;
 }
 .answer { font-size: 15.5px; }
 .answer h2 { font-family: var(--display); text-transform: uppercase; font-size: 21px; margin: 22px 0 8px; }
 .answer h3 { font-family: var(--display); text-transform: uppercase; font-size: 17px; margin: 18px 0 6px; }
 .answer p, .answer li { font-size: 15.5px; }
 .answer code { font-family: var(--mono); font-size: 0.88em; background: var(--paper); border-radius: 4px; padding: 1px 5px; }
-.answer pre { background: var(--purple-dark); color: #efe6f5; padding: 12px; border-radius: 8px; overflow-x: auto; }
+.answer pre { background: var(--purple-dark); color: #efe6f5; padding: 12px; border-radius: 0; overflow-x: auto; }
 .answer blockquote { border-left: 3px solid var(--glow); margin: 12px 0; padding: 2px 14px; color: var(--ink-2); }
 footer { background: none; border: none; border-top: 1px dashed var(--line); border-radius: 0;
   color: var(--ink-3); font-size: 13.5px; }
@@ -55275,7 +55275,7 @@ function fmtDate(iso) {
   }
 }
 function renderAnswerPage(row) {
-  const title = `${row.question} \u2014 256 wiki`;
+  const title = `${row.question} \u2014 256 Foundation wiki`;
   const description = row.answer.replace(/[#*`>[\]()\n]/g, " ").replace(/\s+/g, " ").trim().slice(0, 160);
   const citationsHtml = row.citations.length ? `<section class="cites"><h2>Sources</h2><ol>${row.citations.map(
     (c5) => `<li><a href="/pages/${escapeHtml(c5.slug)}/">${escapeHtml(c5.title)}</a>${c5.asOf ? ` <span class="asof">As-Of ${escapeHtml(c5.asOf)}</span>` : ""}</li>`
