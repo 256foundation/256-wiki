@@ -43,8 +43,7 @@ export default function HomePage() {
       </ul>
 
       <p className="quietlinks">
-        <a href="/library">browse the library →</a> ·{" "}
-        <a href="/ask#connect-your-agent">use your own agent →</a>
+        <a href="/library">browse the library →</a> · <a href="/agents">use your own agent →</a>
       </p>
     </div>
   );

@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import GapsBoard from "@/components/GapsBoard";
 
 export const metadata: Metadata = {
-  title: "Gaps — what the brain doesn't know",
+  title: "Gaps",
   description:
-    "Questions people asked that the 256 Foundation Public Mining Brain couldn't ground. Curation is visible: top gaps become next week's ingest targets.",
+    "Questions people asked that the 256 Foundation Public Mining Brain couldn't ground — highest demand first.",
 };
 
 export default function GapsPage() {
@@ -12,16 +12,19 @@ export default function GapsPage() {
     <div className="wrap simple">
       <h1>Open gaps</h1>
       <p className="summary">
-        Questions people asked that the brain couldn&apos;t answer. Curation is visible here:
-        gaps become next week&apos;s ingest targets, highest demand first.
+        What the brain doesn't know yet — top of the list is the next ingest target.
       </p>
 
       <GapsBoard />
 
-      <h2>Know a source that would close a gap?</h2>
-      <p>
-        Don&apos;t wait for the board — <a href="/contribute">suggest the source now</a>. Ingestion is
-        PR-based and open to everyone.
+      <p className="note">
+        Know a source that closes a gap?{" "}
+        <a
+          href="https://github.com/256foundation/public-mining-brain/issues/new?template=suggest-a-source.md"
+        >
+          Suggest it
+        </a>{" "}
+        — don't wait for the board.
       </p>
     </div>
   );

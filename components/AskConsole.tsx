@@ -289,7 +289,7 @@ function TurnView({ turn, scrubLinks }: { turn: Turn; scrubLinks: (el: HTMLEleme
         <strong>{turn.kind === "breaker" ? "Foundation budget spent for today." : turn.kind === "quota" ? "Daily free answers used up." : "Something went wrong."}</strong>
         <p>{turn.message}</p>
         <p className="note">
-          unlimited: <a href="#connect-your-agent">use your own agent</a>
+          unlimited: <a href="/agents">use your own agent</a>
         </p>
       </div>
     );

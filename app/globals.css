@@ -460,6 +460,11 @@ h1.title { font-size: clamp(28px, 4.5vw, 38px); margin: 0 0 10px; }
 }
 .note { color: var(--ink-3); font-size: 13px; }
 
+/* agents endpoint table */
+.endpointtable { border-collapse: collapse; width: 100%; font-size: 13.5px; margin: 14px 0; }
+.endpointtable td { border: 1px solid var(--line); padding: 6px 10px; vertical-align: top; }
+.endpointtable td:first-child { font-family: var(--mono); font-size: 12.5px; white-space: nowrap; }
+
 /* library search */
 .libsearch { margin: 20px 0 8px; }
 .libsearch .landbox { max-width: 560px; }
