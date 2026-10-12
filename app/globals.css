@@ -246,7 +246,8 @@ h1, h2, h3 { font-family: var(--display); text-transform: uppercase; letter-spac
   gap: 8px;
 }
 .landbox textarea,
-.landbox input[type="text"] {
+.landbox input[type="text"],
+.landbox input[type="search"] {
   width: 100%;
   padding: 16px 18px;
   border: 1px solid var(--line);
