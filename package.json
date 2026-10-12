@@ -8,7 +8,6 @@
     "dev:api": "esbuild server/dev-server.ts --bundle --platform=node --format=esm --outfile=build/dev-api.mjs --log-level=warning && node build/dev-api.mjs",
     "fetch:pack": "node scripts/fetch-pack.mjs",
     "build": "npm run fetch:pack && next build",
-    "postbuild": "npx --yes pagefind --site out || echo 'pagefind skipped (search index optional)'",
     "build:lambda": "npm run fetch:pack && node scripts/build-lambda.mjs",
     "lint": "next lint",
     "typecheck": "npm run fetch:pack && tsc --noEmit",

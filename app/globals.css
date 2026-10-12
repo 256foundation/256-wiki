@@ -460,6 +460,12 @@ h1.title { font-size: clamp(28px, 4.5vw, 38px); margin: 0 0 10px; }
 }
 .note { color: var(--ink-3); font-size: 13px; }
 
+/* library search */
+.libsearch { margin: 20px 0 8px; }
+.libsearch .landbox { max-width: 560px; }
+.libsearch .landbox textarea { min-height: 0; }
+.libsearch .topiclist { margin-top: 18px; }
+
 /* ask page shell */
 .ask-shell {
   border: 1px solid var(--line);
@@ -472,19 +478,6 @@ h1.title { font-size: clamp(28px, 4.5vw, 38px); margin: 0 0 10px; }
 /* code copy blocks on contribute/about */
 .copyblock { position: relative; }
 .copyblock code.inline-list { display: block; white-space: pre-wrap; }
-
-/* pagefind search UI */
-.pagefind-holder .pagefind-ui {
-  --pagefind-ui-primary: var(--accent);
-  --pagefind-ui-text: var(--ink);
-  --pagefind-ui-background: var(--paper);
-  --pagefind-ui-border: var(--line);
-  --pagefind-ui-tag: var(--paper-2);
-  --pagefind-ui-border-radius: 8px;
-  font-family: var(--sans);
-}
-.pagefind-holder .pagefind-ui__result .pagefind-ui__result-name { font-weight: 600; }
-.pagefind-holder .pagefind-ui__result-excerpt mark { background: var(--amber-bg); color: var(--amber-ink); }
 
 /* ask console */
 .askconsole { margin: 22px 0; }
