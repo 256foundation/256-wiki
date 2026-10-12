@@ -187,7 +187,7 @@ export default function AskConsole({ anonQuota }: { anonQuota: number }) {
           onKeyDown={(e) => {
             if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) ask(inputRef.current?.value ?? "");
           }}
-          placeholder="e.g. What's the difference between FPPS and PPLNS — and who keeps the fees?"
+          placeholder="Ask the brain…"
           rows={2}
           maxLength={2000}
           aria-label="Your mining question"
@@ -206,16 +206,15 @@ export default function AskConsole({ anonQuota }: { anonQuota: number }) {
               parts.push(node);
             };
             if (me?.signedIn) {
-              push(`signed in as ${me.name} (${me.tier === "team" ? "unlimited" : "25/day"})`);
+              push(me.tier === "team" ? "signed in — unlimited" : "signed in — 25/day");
             } else if (SITE_KEY) {
-              push(tsToken ? "✓ verified human" : "complete the check below to ask");
+              push(tsToken ? "✓ verified" : "verify below to ask");
             }
-            if (quotaLeft !== null) push(`${quotaLeft} free answer${quotaLeft === 1 ? "" : "s"} left today`);
-            else if (!me?.signedIn) push(`${anonQuota} free answers/day`);
-            push(<em>cache hits are always free</em>);
+            if (quotaLeft !== null) push(`${quotaLeft} left today`);
+            else if (!me?.signedIn) push(`${anonQuota}/day free`);
             if (me?.signedIn) {
               push(
-                <a className="signout" href="/api/auth/signout">
+                <a key="signout" className="signout" href="/api/auth/signout">
                   sign out
                 </a>,
               );
@@ -248,9 +247,7 @@ function SignInRow({
 }) {
   return (
     <div className="signinrow">
-      <span className="signinrow-label">
-        Sign in — 25 answers/day, no captcha:{" "}
-      </span>
+      <span className="signinrow-label">Sign in — 25/day, no captcha:</span>
       <span className="signinrow-btns">
         {providers.authentik ? (
           <a className="signinbtn" href={`/api/auth/start?via=authentik&next=${encodeURIComponent("/ask")}`}>
@@ -278,7 +275,7 @@ function SignInRow({
           </a>
         ) : null}
         {!providers.github && !providers.google && !providers.authentik ? (
-          <span className="note">OAuth providers not configured yet — anonymous quota still applies.</span>
+          <span className="note">No providers configured yet — anonymous quota applies.</span>
         ) : null}
       </span>
     </div>
@@ -292,8 +289,7 @@ function TurnView({ turn, scrubLinks }: { turn: Turn; scrubLinks: (el: HTMLEleme
         <strong>{turn.kind === "breaker" ? "Foundation budget spent for today." : turn.kind === "quota" ? "Daily free answers used up." : "Something went wrong."}</strong>
         <p>{turn.message}</p>
         <p className="note">
-          The unlimited path: <a href="#connect-your-agent">connect your own agent</a> — search, pages, and MCP
-          retrieval are free and unmetered.
+          unlimited: <a href="#connect-your-agent">use your own agent</a>
         </p>
       </div>
     );
@@ -306,12 +302,6 @@ function TurnView({ turn, scrubLinks }: { turn: Turn; scrubLinks: (el: HTMLEleme
       <div className="anshead">
         {gap ? <span className="badge disputed">gap logged</span> : null}
         {d.cached ? <span className="badge asof">cache hit — free</span> : null}
-        <span className="badge">{d.model === "none" ? "no LLM needed" : d.model.split("/").pop()}</span>
-        {d.packHash ? (
-          <span className="badge" title={d.packHash}>
-            pack {d.packHash.slice(7, 15)}
-          </span>
-        ) : null}
       </div>
       <div
         className="article answerview"

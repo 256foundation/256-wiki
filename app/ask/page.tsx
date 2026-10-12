@@ -14,24 +14,15 @@ export default function AskPage() {
     <div className="wrap simple">
       <h1>Ask the brain</h1>
       <p className="summary">
-        Grounded answers from the Public Mining Brain — every answer cites its wiki sources with
-        As-Of dates, surfaces disputes instead of picking winners, and links a permanent permalink
-        you can share or cite.
+        Every answer cites its wiki sources with As-Of dates and gets a permanent permalink.
       </p>
 
       <AskConsole anonQuota={ANON_QUOTA} />
 
-      <p className="note">
-        Anonymous: {ANON_QUOTA} answers/day · signed-in: 25/day · repeated questions are served from
-        cache and never cost anyone anything · when the foundation's daily token budget is spent, the
-        agent path below stays wide open.
-      </p>
-
       <h2 id="connect-your-agent">Connect your own agent — the unlimited path</h2>
       <p>
-        The web chat is rate-limited because <em>the foundation pays for those tokens</em>. Your
-        agent using <strong>your</strong> tokens has no such cap: retrieval (search, pages, pack)
-        is free and unmetered.
+        The web chat is rate-limited — the foundation pays those tokens. Your agent uses yours;
+        retrieval is free and unmetered.
       </p>
 
       <h3>Claude Code</h3>
