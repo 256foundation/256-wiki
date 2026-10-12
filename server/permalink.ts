@@ -8,6 +8,7 @@
 
 import { marked } from "marked";
 import type { AnswerRow } from "./store";
+import { PERMALINK_CSS } from "./permalink-css";
 
 function escapeHtml(text: string): string {
   return text
@@ -42,7 +43,7 @@ export function renderAnswerPage(row: {
   packHash: string;
   createdAt: string;
 }): string {
-  const title = `${row.question} — 256 wiki`;
+  const title = `${row.question} — 256 Foundation wiki`;
   const description = row.answer.replace(/[#*`>[\]()\n]/g, " ").replace(/\s+/g, " ").trim().slice(0, 160);
   const citationsHtml = row.citations.length
     ? `<section class="cites"><h2>Sources</h2><ol>${row.citations
@@ -67,19 +68,21 @@ export function renderAnswerPage(row: {
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://wiki.256foundation.org/a/${escapeHtml(row.answerId)}">
 <meta name="twitter:card" content="summary">
-<link rel="stylesheet" href="/a.css">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Space+Mono&display=swap">
+<style>${PERMALINK_CSS}</style>
 </head>
 <body>
 <main>
-<p class="kicker"><a href="/">256 wiki</a> · grounded answer</p>
+<p class="kicker"><a href="/">256 Foundation · Mining Brain</a> · grounded answer</p>
 <h1>${escapeHtml(row.question)}</h1>
 <article class="answer">${safeMarkdown(row.answer)}</article>
 ${citationsHtml}
 <footer>
-<p>Answered ${escapeHtml(fmtDate(row.createdAt))} by ${escapeHtml(row.model)} from knowledge pack
-<code>${escapeHtml(row.packHash.slice(0, 19))}</code>. Answers may be contested — check
-<a href="/gaps/">open gaps</a>. Every number carries its <a href="/about/">As-Of date</a>.</p>
-<p><a href="/ask/">Ask your own question</a> · <a href="/api/index.json">agent index</a> · <a href="/SKILL.md">agent skill</a></p>
+<p>Answered ${escapeHtml(fmtDate(row.createdAt))} · ${escapeHtml(row.model)} · pack <code>${escapeHtml(row.packHash.slice(7, 15))}</code> · <a href="/gaps/">open gaps</a></p>
+<p><a href="/ask/">Ask your own question</a> · <a href="/agents/">agent endpoints</a> · <a href="/SKILL.md">SKILL.md</a></p>
 </footer>
 </main>
 </body>
@@ -89,10 +92,14 @@ ${citationsHtml}
 export function renderNotFound(answerId: string): string {
   return `<!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><title>Answer not found — 256 wiki</title>
-<meta name="robots" content="noindex"><link rel="stylesheet" href="/a.css"></head>
+<head><meta charset="utf-8"><title>Answer not found — 256 Foundation wiki</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Space+Mono&display=swap">
+<style>${PERMALINK_CSS}</style></head>
 <body><main>
-<p class="kicker"><a href="/">256 wiki</a></p>
+<p class="kicker"><a href="/">256 Foundation · Mining Brain</a></p>
 <h1>Answer not found</h1>
 <p>No cached answer <code>${escapeHtml(answerId)}</code> — answers expire (90 days) or the
 knowledge pack was rebuilt. Ask again:</p>

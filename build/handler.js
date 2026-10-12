@@ -14184,11 +14184,11 @@ var require_lru_cache = __commonJS({
         Keys = null;
         Values = null;
       }
-      var cache7 = new LRUCache(Keys, Values, capacity);
+      var cache6 = new LRUCache(Keys, Values, capacity);
       forEach(iterable, function(value, key) {
-        cache7.set(key, value);
+        cache6.set(key, value);
       });
-      return cache7;
+      return cache6;
     };
     module2.exports = LRUCache;
   }
@@ -17070,9 +17070,9 @@ function loadCborStructIterator(ns) {
   for (let i5 = 0; i5 < memberNames.length; ++i5) {
     encodedKeys[i5] = encodeCborStringKey(memberNames[i5]);
   }
-  const cache7 = { memberNames, memberSchemas, encodedKeys };
-  schema[CBOR_STRUCT_CACHE] = cache7;
-  return cache7;
+  const cache6 = { memberNames, memberSchemas, encodedKeys };
+  schema[CBOR_STRUCT_CACHE] = cache6;
+  return cache6;
 }
 function encodeCborStringKey(s2) {
   let utf8Bytes;
@@ -17237,8 +17237,8 @@ function writeStruct(ns, value, serdeContext) {
     }
     return;
   }
-  const cache7 = loadCborStructIterator(ns);
-  const { memberNames, memberSchemas, encodedKeys } = cache7;
+  const cache6 = loadCborStructIterator(ns);
+  const { memberNames, memberSchemas, encodedKeys } = cache6;
   const z = memberNames.length;
   let headerSize;
   if (z < 24) {
@@ -17704,8 +17704,8 @@ function readMap(ns) {
 }
 function readStruct(ns, count, startPos) {
   const isUnion = ns.isUnionSchema();
-  const cache7 = loadCborStructIterator(ns);
-  const { memberSchemas, encodedKeys, memberNames } = cache7;
+  const cache6 = loadCborStructIterator(ns);
+  const { memberSchemas, encodedKeys, memberNames } = cache6;
   const z = encodedKeys.length;
   const result = {};
   let unknownKey;
@@ -17888,8 +17888,8 @@ function readListIndefinite(ns) {
 function readMapIndefinite(ns) {
   pos += 1;
   if (ns.isStructSchema()) {
-    const cache7 = loadCborStructIterator(ns);
-    const { memberSchemas, encodedKeys, memberNames } = cache7;
+    const cache6 = loadCborStructIterator(ns);
+    const { memberSchemas, encodedKeys, memberNames } = cache6;
     const z = encodedKeys.length;
     const isUnion = ns.isUnionSchema();
     const result = {};
@@ -22039,18 +22039,18 @@ var init_bdd = __esm({
 });
 
 // node_modules/@aws-sdk/nested-clients/dist-es/submodules/sso-oidc/endpoint/endpointResolver.js
-var cache2, defaultEndpointResolver;
+var cache, defaultEndpointResolver;
 var init_endpointResolver = __esm({
   "node_modules/@aws-sdk/nested-clients/dist-es/submodules/sso-oidc/endpoint/endpointResolver.js"() {
     init_client3();
     init_endpoints();
     init_bdd();
-    cache2 = new EndpointCache({
+    cache = new EndpointCache({
       size: 50,
       params: ["Endpoint", "Region", "UseDualStack", "UseFIPS"]
     });
     defaultEndpointResolver = (endpointParams, context = {}) => {
-      return cache2.get(endpointParams, () => decideEndpoint(bdd, {
+      return cache.get(endpointParams, () => decideEndpoint(bdd, {
         endpointParams,
         logger: context.logger
       }));
@@ -23118,18 +23118,18 @@ var init_bdd2 = __esm({
 });
 
 // node_modules/@aws-sdk/nested-clients/dist-es/submodules/sso/endpoint/endpointResolver.js
-var cache3, defaultEndpointResolver2;
+var cache2, defaultEndpointResolver2;
 var init_endpointResolver2 = __esm({
   "node_modules/@aws-sdk/nested-clients/dist-es/submodules/sso/endpoint/endpointResolver.js"() {
     init_client3();
     init_endpoints();
     init_bdd2();
-    cache3 = new EndpointCache({
+    cache2 = new EndpointCache({
       size: 50,
       params: ["Endpoint", "Region", "UseDualStack", "UseFIPS"]
     });
     defaultEndpointResolver2 = (endpointParams, context = {}) => {
-      return cache3.get(endpointParams, () => decideEndpoint(bdd2, {
+      return cache2.get(endpointParams, () => decideEndpoint(bdd2, {
         endpointParams,
         logger: context.logger
       }));
@@ -24127,18 +24127,18 @@ var init_bdd3 = __esm({
 });
 
 // node_modules/@aws-sdk/nested-clients/dist-es/submodules/sts/endpoint/endpointResolver.js
-var cache4, defaultEndpointResolver3;
+var cache3, defaultEndpointResolver3;
 var init_endpointResolver3 = __esm({
   "node_modules/@aws-sdk/nested-clients/dist-es/submodules/sts/endpoint/endpointResolver.js"() {
     init_client3();
     init_endpoints();
     init_bdd3();
-    cache4 = new EndpointCache({
+    cache3 = new EndpointCache({
       size: 50,
       params: ["Endpoint", "Region", "UseDualStack", "UseFIPS", "UseGlobalEndpoint"]
     });
     defaultEndpointResolver3 = (endpointParams, context = {}) => {
-      return cache4.get(endpointParams, () => decideEndpoint(bdd3, {
+      return cache3.get(endpointParams, () => decideEndpoint(bdd3, {
         endpointParams,
         logger: context.logger
       }));
@@ -25463,18 +25463,18 @@ var init_bdd4 = __esm({
 });
 
 // node_modules/@aws-sdk/nested-clients/dist-es/submodules/signin/endpoint/endpointResolver.js
-var cache5, defaultEndpointResolver4;
+var cache4, defaultEndpointResolver4;
 var init_endpointResolver4 = __esm({
   "node_modules/@aws-sdk/nested-clients/dist-es/submodules/signin/endpoint/endpointResolver.js"() {
     init_client3();
     init_endpoints();
     init_bdd4();
-    cache5 = new EndpointCache({
+    cache4 = new EndpointCache({
       size: 50,
       params: ["Endpoint", "IsControlPlane", "IsOAuthEndpoint", "Region", "UseDualStack", "UseFIPS"]
     });
     defaultEndpointResolver4 = (endpointParams, context = {}) => {
-      return cache5.get(endpointParams, () => decideEndpoint(bdd4, {
+      return cache4.get(endpointParams, () => decideEndpoint(bdd4, {
         endpointParams,
         logger: context.logger
       }));
@@ -32153,7 +32153,7 @@ var require_dist_cjs19 = __commonJS({
       r5 + 4
     ]);
     var bdd5 = BinaryDecisionDiagram2.from(nodes5, root5, _data5.conditions, _data5.results);
-    var cache7 = new EndpointCache2({
+    var cache6 = new EndpointCache2({
       size: 50,
       params: [
         "AccountId",
@@ -32168,7 +32168,7 @@ var require_dist_cjs19 = __commonJS({
       ]
     });
     var defaultEndpointResolver5 = (endpointParams, context = {}) => {
-      return cache7.get(endpointParams, () => decideEndpoint2(bdd5, {
+      return cache6.get(endpointParams, () => decideEndpoint2(bdd5, {
         endpointParams,
         logger: context.logger
       }));
@@ -38955,96 +38955,6 @@ var cors = (options2) => {
     if (opts.origin !== "*") c5.header("Vary", "Origin", { append: true });
   };
 };
-
-// server/live.ts
-var CACHE_TTL_MS = 6e4;
-var cache = null;
-var POOL_PROM_URL = process.env.POOL_PROM_URL || "https://pool.256foundation.org";
-var MEMPOOL_API_URL = process.env.MEMPOOL_API_URL || "https://mempool.space/api";
-var FETCH_TIMEOUT_MS = 4e3;
-async function fetchJson(url, timeoutMs = FETCH_TIMEOUT_MS) {
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
-  try {
-    const res = await fetch(url, { signal: ctrl.signal, headers: { Accept: "application/json" } });
-    if (!res.ok) throw new Error(`${res.status}`);
-    return await res.json();
-  } finally {
-    clearTimeout(timer);
-  }
-}
-async function poolQuery(query) {
-  try {
-    const url = `${POOL_PROM_URL}/api/v1/query?query=${encodeURIComponent(query)}`;
-    const body = await fetchJson(url);
-    if (body?.status !== "success" || !body.data?.result?.[0]) return null;
-    const n3 = Number(body.data.result[0].value[1]);
-    return Number.isFinite(n3) ? n3 : null;
-  } catch {
-    return null;
-  }
-}
-function formatHashrate(hps) {
-  if (!Number.isFinite(hps) || hps <= 0) return "0 H/s";
-  const units = ["H/s", "kH/s", "MH/s", "GH/s", "TH/s", "PH/s", "EH/s"];
-  let i5 = 0;
-  let v = hps;
-  while (v >= 1e3 && i5 < units.length - 1) {
-    v /= 1e3;
-    i5 += 1;
-  }
-  return `${v >= 100 ? v.toFixed(0) : v.toFixed(1)} ${units[i5]}`;
-}
-async function getPool() {
-  const [total, active] = await Promise.all([
-    poolQuery("sum(rate(worker_shares_valid_total[5m]))"),
-    poolQuery("count(sum by (btcaddress) (rate(worker_shares_valid_total[5m])))")
-  ]);
-  return {
-    hashrate: total != null ? formatHashrate(total) : null,
-    hashrateHps: total,
-    activeWorkers: active,
-    source: "pool.256foundation.org Prometheus"
-  };
-}
-async function getNetwork() {
-  const result = {
-    difficulty: null,
-    hashrate: null,
-    blockHeight: null,
-    source: "mempool.space"
-  };
-  try {
-    const height = await fetchJson(`${MEMPOOL_API_URL}/v1/blocks/tip/height`, 3e3);
-    const n3 = Number(height);
-    result.blockHeight = Number.isFinite(n3) ? n3 : null;
-  } catch {
-  }
-  try {
-    const stats = await fetchJson(`${MEMPOOL_API_URL}/v1/mining/hashrate/3d`, 4e3);
-    const hr2 = Number(stats.currentHashrate) || stats.hashrates?.at(-1)?.avgHashrate;
-    if (hr2 && Number.isFinite(hr2)) result.hashrate = formatHashrate(hr2);
-    const diff = Number(stats.currentDifficulty) || stats.difficulty?.at(-1)?.difficulty;
-    if (diff && Number.isFinite(diff)) result.difficulty = formatDifficulty(diff);
-  } catch {
-  }
-  return result;
-}
-function formatDifficulty(d5) {
-  if (!Number.isFinite(d5)) return "\u2014";
-  if (d5 >= 1e12) return `${(d5 / 1e12).toFixed(2)} T`;
-  if (d5 >= 1e9) return `${(d5 / 1e9).toFixed(2)} G`;
-  return d5.toExponential(2);
-}
-async function getLiveStats() {
-  if (cache && Date.now() - cache.at < CACHE_TTL_MS) {
-    return { ...cache.value, cacheAgeSeconds: Math.round((Date.now() - cache.at) / 1e3) };
-  }
-  const [pool, network] = await Promise.all([getPool(), getNetwork()]);
-  const value = { updated: (/* @__PURE__ */ new Date()).toISOString(), cacheAgeSeconds: 0, pool, network };
-  cache = { at: Date.now(), value };
-  return value;
-}
 
 // lib/retrieval.ts
 var CHUNK_TOKENS = 300;
@@ -54175,6 +54085,98 @@ function toAnswer(row, packHash) {
   };
 }
 
+// server/permalink-css.ts
+var PERMALINK_CSS = String.raw`
+/* /a/<id> answer permalinks — rendered by the Lambda, styled standalone.
+ * Same 256F tokens as the site (light + dark via system preference). */
+:root {
+  --sans: -apple-system, "Segoe UI", Inter, Roboto, "Helvetica Neue", sans-serif;
+  --mono: "Space Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
+  --display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --paper: #ffffff;
+  --paper-2: #f5f5f5;
+  --deep: #13091a;
+  --ink: #242424;
+  --ink-2: #55505a;
+  --ink-3: #8a8492;
+  --line: #e5e5e5;
+  --purple: #3b1445;
+  --purple-dark: #2d0f36;
+  --purple-light: #5c2070;
+  --glow: #c084d8;
+  --accent: #5c2070;
+  --green: #0c8a3d;
+  --amber-bg: #fdf3dd;
+  --amber-line: #e8c37a;
+  --amber-ink: #7c5305;
+  --blue-bg: #f1eaf7;
+  --blue-ink: #5c2070;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #1a1a1a;
+    --paper-2: #242424;
+    --ink: #f0f0f0;
+    --ink-2: #c2bcc9;
+    --ink-3: #8f8898;
+    --line: #2a2a2a;
+    --accent: #c084d8;
+    --green: #00ff41;
+    --amber-bg: rgba(232, 195, 122, 0.09);
+    --amber-line: #6b5a2a;
+    --amber-ink: #e5c67f;
+    --blue-bg: #241b30;
+    --blue-ink: #c084d8;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  line-height: 1.6;
+}
+main { max-width: 46rem; margin: 0 auto; padding: 48px 20px 64px; }
+.kicker { font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; margin: 0 0 18px; }
+.kicker a { color: var(--ink-3); text-decoration: none; }
+.kicker a:hover { color: var(--accent); }
+h1 {
+  font-family: var(--display); text-transform: uppercase;
+  font-size: clamp(26px, 5vw, 36px); line-height: 1.12; margin: 0 0 18px;
+}
+.answer, .cites, footer {
+  background: var(--paper-2); border: 1px solid var(--line); border-radius: 12px;
+  padding: 20px 22px; margin: 18px 0;
+}
+.cites h2 {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 0.07em;
+  color: var(--ink-3); font-family: var(--mono); margin: 0 0 10px;
+}
+.cites ol { margin: 0; padding-left: 20px; }
+.cites li { margin: 5px 0; font-size: 14.5px; }
+.cites a { color: var(--accent); }
+.cites .asof {
+  font-family: var(--mono); font-size: 11.5px; color: var(--blue-ink);
+  background: var(--blue-bg); border-radius: 999px; padding: 1px 8px; margin-left: 4px;
+}
+.answer { font-size: 15.5px; }
+.answer h2 { font-family: var(--display); text-transform: uppercase; font-size: 21px; margin: 22px 0 8px; }
+.answer h3 { font-family: var(--display); text-transform: uppercase; font-size: 17px; margin: 18px 0 6px; }
+.answer p, .answer li { font-size: 15.5px; }
+.answer code { font-family: var(--mono); font-size: 0.88em; background: var(--paper); border-radius: 4px; padding: 1px 5px; }
+.answer pre { background: var(--purple-dark); color: #efe6f5; padding: 12px; border-radius: 8px; overflow-x: auto; }
+.answer blockquote { border-left: 3px solid var(--glow); margin: 12px 0; padding: 2px 14px; color: var(--ink-2); }
+footer { background: none; border: none; border-top: 1px dashed var(--line); border-radius: 0;
+  color: var(--ink-3); font-size: 13.5px; }
+footer a { color: var(--accent); }
+code { font-family: var(--mono); font-size: 0.9em; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--ink); }
+@media (max-width: 640px) { main { padding: 32px 16px 48px; } }
+
+`;
+
 // server/permalink.ts
 function escapeHtml(text) {
   return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
@@ -54191,7 +54193,7 @@ function fmtDate(iso) {
   }
 }
 function renderAnswerPage(row) {
-  const title = `${row.question} \u2014 256 wiki`;
+  const title = `${row.question} \u2014 256 Foundation wiki`;
   const description = row.answer.replace(/[#*`>[\]()\n]/g, " ").replace(/\s+/g, " ").trim().slice(0, 160);
   const citationsHtml = row.citations.length ? `<section class="cites"><h2>Sources</h2><ol>${row.citations.map(
     (c5) => `<li><a href="/pages/${escapeHtml(c5.slug)}/">${escapeHtml(c5.title)}</a>${c5.asOf ? ` <span class="asof">As-Of ${escapeHtml(c5.asOf)}</span>` : ""}</li>`
@@ -54208,19 +54210,21 @@ function renderAnswerPage(row) {
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://wiki.256foundation.org/a/${escapeHtml(row.answerId)}">
 <meta name="twitter:card" content="summary">
-<link rel="stylesheet" href="/a.css">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Space+Mono&display=swap">
+<style>${PERMALINK_CSS}</style>
 </head>
 <body>
 <main>
-<p class="kicker"><a href="/">256 wiki</a> \xB7 grounded answer</p>
+<p class="kicker"><a href="/">256 Foundation \xB7 Mining Brain</a> \xB7 grounded answer</p>
 <h1>${escapeHtml(row.question)}</h1>
 <article class="answer">${safeMarkdown(row.answer)}</article>
 ${citationsHtml}
 <footer>
-<p>Answered ${escapeHtml(fmtDate(row.createdAt))} by ${escapeHtml(row.model)} from knowledge pack
-<code>${escapeHtml(row.packHash.slice(0, 19))}</code>. Answers may be contested \u2014 check
-<a href="/gaps/">open gaps</a>. Every number carries its <a href="/about/">As-Of date</a>.</p>
-<p><a href="/ask/">Ask your own question</a> \xB7 <a href="/api/index.json">agent index</a> \xB7 <a href="/SKILL.md">agent skill</a></p>
+<p>Answered ${escapeHtml(fmtDate(row.createdAt))} \xB7 ${escapeHtml(row.model)} \xB7 pack <code>${escapeHtml(row.packHash.slice(7, 15))}</code> \xB7 <a href="/gaps/">open gaps</a></p>
+<p><a href="/ask/">Ask your own question</a> \xB7 <a href="/agents/">agent endpoints</a> \xB7 <a href="/SKILL.md">SKILL.md</a></p>
 </footer>
 </main>
 </body>
@@ -54229,10 +54233,14 @@ ${citationsHtml}
 function renderNotFound(answerId) {
   return `<!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><title>Answer not found \u2014 256 wiki</title>
-<meta name="robots" content="noindex"><link rel="stylesheet" href="/a.css"></head>
+<head><meta charset="utf-8"><title>Answer not found \u2014 256 Foundation wiki</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Space+Mono&display=swap">
+<style>${PERMALINK_CSS}</style></head>
 <body><main>
-<p class="kicker"><a href="/">256 wiki</a></p>
+<p class="kicker"><a href="/">256 Foundation \xB7 Mining Brain</a></p>
 <h1>Answer not found</h1>
 <p>No cached answer <code>${escapeHtml(answerId)}</code> \u2014 answers expire (90 days) or the
 knowledge pack was rebuilt. Ask again:</p>
@@ -54498,18 +54506,18 @@ async function prepareKey(entry, key, usage) {
     if (keyObject = key, keyObject.type === "secret")
       return keyObject.export();
   }
-  cache6 ||= /* @__PURE__ */ new WeakMap();
+  cache5 ||= /* @__PURE__ */ new WeakMap();
   const cacheKey = key;
-  let cached = cache6.get(cacheKey);
+  let cached = cache5.get(cacheKey);
   if (cached?.[alg])
     return cached[alg];
-  if (cached || cache6.set(cacheKey, cached = {}), keyObject && typeof keyObject.toCryptoKey == "function") {
+  if (cached || cache5.set(cacheKey, cached = {}), keyObject && typeof keyObject.toCryptoKey == "function") {
     const isPublic = keyObject.type === "public", crv = nist[keyObject.asymmetricKeyDetails?.namedCurve], params = entry.resolve?.({ crv, asymmetricKeyType: keyObject.asymmetricKeyType }) ?? entry.subtle;
     return cached[alg] = keyObject.toCryptoKey(params, isPublic, entry.usages[isPublic ? 0 : 1]);
   }
   return normalized ??= keyObject.export({ format: "jwk" }), normalized.alg = alg, cached[alg] = await jwkToKey(entry, normalized);
 }
-var cache6;
+var cache5;
 var nist = {
   __proto__: null,
   prime256v1: "P-256",
@@ -54815,8 +54823,8 @@ function isUsableJWK(jwk, entry, alg, kid) {
   const { kty, key_ops: keyOps, ext, kid: jwkKid, alg: jwkAlg, use: use2, crv } = jwk;
   return (ext === void 0 || typeof ext == "boolean") && (keyOps === void 0 || Array.isArray(keyOps) && keyOps.every((operation2, index) => typeof operation2 == "string" && keyOps.indexOf(operation2) === index) && keyOps.includes("verify")) && entry.kty.includes(kty) && (kid === void 0 || typeof kid == "string" && kid === jwkKid) && (jwkAlg === void 0 ? kty !== "AKP" : alg === jwkAlg) && (use2 === void 0 || use2 === "sig") && (!entry.crv || crv === entry.crv);
 }
-async function importWithAlgCache(cache7, jwk, entry) {
-  const cached = cache7.get(jwk) || cache7.set(jwk, {}).get(jwk), { alg } = entry;
+async function importWithAlgCache(cache6, jwk, entry) {
+  const cached = cache6.get(jwk) || cache6.set(jwk, {}).get(jwk), { alg } = entry;
   if (cached[alg] === void 0) {
     const pending = jwkToKey(entry, jwk, true).then((key) => {
       if (key.type !== "public")
@@ -54905,10 +54913,10 @@ function createRemoteJWKSet(url, options2) {
     throw new TypeError('"timeoutDuration" option must be a non-negative integer');
   const timeoutDuration = typeof timeoutOption == "number" ? timeoutOption : 5e3, cooldownDuration = validateDuration(opts.cooldownDuration, 3e4, "cooldownDuration"), cacheMaxAge = validateDuration(opts.cacheMaxAge, 6e5, "cacheMaxAge"), headers = new Headers(opts.headers);
   USER_AGENT2 && !headers.has("User-Agent") && headers.set("User-Agent", USER_AGENT2), headers.has("accept") || headers.set("accept", "application/json, application/jwk-set+json");
-  const fetchImpl = opts[customFetch], cache7 = opts[jwksCache];
+  const fetchImpl = opts[customFetch], cache6 = opts[jwksCache];
   let jwksTimestamp, pendingFetch, reloadSequence = 0, appliedSequence = 0, local;
-  if (cache7 && typeof cache7 == "object") {
-    const { uat, jwks } = cache7;
+  if (cache6 && typeof cache6 == "object") {
+    const { uat, jwks } = cache6;
     isFreshFor(uat, cacheMaxAge) && isJwkSet(jwks) && (jwksTimestamp = uat, local = createLocalJWKSet(jwks));
   }
   const reload = async () => {
@@ -54919,7 +54927,7 @@ function createRemoteJWKSet(url, options2) {
           return;
         local = next;
         const updatedAt = Date.now();
-        cache7 && (cache7.uat = updatedAt, cache7.jwks = json), jwksTimestamp = updatedAt, appliedSequence = sequence;
+        cache6 && (cache6.uat = updatedAt, cache6.jwks = json), jwksTimestamp = updatedAt, appliedSequence = sequence;
       }).finally(() => {
         pendingFetch === current && (pendingFetch = void 0);
       });
@@ -55042,7 +55050,7 @@ function providers() {
 }
 var STATE_COOKIE = "wiki_oauth";
 var STATE_TTL = 600;
-async function fetchJson2(url, init) {
+async function fetchJson(url, init) {
   const res = await fetch(url, { ...init, signal: AbortSignal.timeout(1e4) });
   if (!res.ok) throw new Error(`${url} \u2192 ${res.status}`);
   return await res.json();
@@ -55160,7 +55168,7 @@ function readStateCookie(cookieHeader) {
 }
 async function sessionFromTokens(cfg, tokens) {
   if (cfg.id === "github") {
-    const user = await fetchJson2("https://api.github.com/user", {
+    const user = await fetchJson("https://api.github.com/user", {
       headers: { Authorization: `Bearer ${tokens.access_token}`, Accept: "application/vnd.github+json", "User-Agent": "256-wiki" }
     });
     return { sub: `github:${user.id}`, tier: "user", name: user.login, via: "github" };
@@ -55473,13 +55481,6 @@ app.get("/api/search", (c5) => {
     { query: q3, packHash: pack.meta.contentHash, count: results.length, results },
     { headers: { "Cache-Control": "public, max-age=60" } }
   );
-});
-app.get("/api/live.json", async (c5) => {
-  const stats = await getLiveStats();
-  return c5.json(stats, {
-    headers: { "Cache-Control": "public, max-age=60" }
-    // CDN caches 60s too
-  });
 });
 var store = selectStore();
 app.post("/api/ask", async (c5) => {
