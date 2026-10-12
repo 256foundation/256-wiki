@@ -2,7 +2,7 @@
 # dynamic GETs. Routing:
 #   default                  → S3 (site/, trailing-slash rewrite via CF function)
 #   /api/index.json, /api/pages/*, /api/feed.xml → S3 (prebuilt)
-#   /api/search*, /api/live.json, /api/ask, /api/suggest, /mcp, /a/* → Lambda
+#   /api/search*, /api/ask, /api/suggest, /mcp, /a/* → Lambda
 # Pack for site builds is pulled from GitHub releases at CI time; S3 pack/ is
 # the runtime copy the Lambda retrieves from.
 
@@ -139,18 +139,6 @@ resource "aws_cloudfront_distribution" "site" {
 
   ordered_cache_behavior {
     path_pattern               = "/api/search*"
-    target_origin_id           = "lambda-api"
-    viewer_protocol_policy     = "redirect-to-https"
-    allowed_methods            = ["GET", "HEAD", "OPTIONS"]
-    cached_methods             = ["GET", "HEAD"]
-    compress                   = true
-    cache_policy_id            = aws_cloudfront_cache_policy.dynamic_query.id
-    origin_request_policy_id   = aws_cloudfront_origin_request_policy.lambda_post.id
-    response_headers_policy_id = local.managed_cors_response_policy
-  }
-
-  ordered_cache_behavior {
-    path_pattern               = "/api/live.json"
     target_origin_id           = "lambda-api"
     viewer_protocol_policy     = "redirect-to-https"
     allowed_methods            = ["GET", "HEAD", "OPTIONS"]

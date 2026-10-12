@@ -1,6 +1,5 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { getLiveStats } from "@/server/live";
 import { buildIndex, retrieve } from "@/lib/retrieval";
 import { pack } from "@/server/pack";
 import { selectStore } from "@/server/store";
@@ -14,8 +13,8 @@ import { clusterGaps } from "@/server/gaps";
 
 /**
  * The runtime API — deployed as one Node Lambda behind CloudFront (infra/).
- * Read endpoints the CDN doesn't serve statically live here (/api/search,
- * /api/live.json); ask/suggest/mcp join in Phases 2–3 sharing this app.
+ * Read endpoints the CDN doesn't serve statically live here (/api/search);
+ * ask/suggest/mcp join in Phases 2–3 sharing this app.
  * Same tree runs under `npm run dev:api` locally via @hono/node-server.
  */
 
@@ -59,13 +58,6 @@ app.get("/api/search", (c) => {
     { query: q, packHash: pack.meta.contentHash, count: results.length, results },
     { headers: { "Cache-Control": "public, max-age=60" } },
   );
-});
-
-app.get("/api/live.json", async (c) => {
-  const stats = await getLiveStats();
-  return c.json(stats, {
-    headers: { "Cache-Control": "public, max-age=60" }, // CDN caches 60s too
-  });
 });
 
 // persistence — DynamoDB in prod (tables configured), in-memory in dev/tests

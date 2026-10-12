@@ -14186,11 +14186,11 @@ var require_lru_cache = __commonJS({
         Keys = null;
         Values = null;
       }
-      var cache7 = new LRUCache(Keys, Values, capacity);
+      var cache6 = new LRUCache(Keys, Values, capacity);
       forEach(iterable, function(value, key) {
-        cache7.set(key, value);
+        cache6.set(key, value);
       });
-      return cache7;
+      return cache6;
     };
     module.exports = LRUCache;
   }
@@ -17072,9 +17072,9 @@ function loadCborStructIterator(ns) {
   for (let i5 = 0; i5 < memberNames.length; ++i5) {
     encodedKeys[i5] = encodeCborStringKey(memberNames[i5]);
   }
-  const cache7 = { memberNames, memberSchemas, encodedKeys };
-  schema[CBOR_STRUCT_CACHE] = cache7;
-  return cache7;
+  const cache6 = { memberNames, memberSchemas, encodedKeys };
+  schema[CBOR_STRUCT_CACHE] = cache6;
+  return cache6;
 }
 function encodeCborStringKey(s2) {
   let utf8Bytes;
@@ -17239,8 +17239,8 @@ function writeStruct(ns, value, serdeContext) {
     }
     return;
   }
-  const cache7 = loadCborStructIterator(ns);
-  const { memberNames, memberSchemas, encodedKeys } = cache7;
+  const cache6 = loadCborStructIterator(ns);
+  const { memberNames, memberSchemas, encodedKeys } = cache6;
   const z = memberNames.length;
   let headerSize;
   if (z < 24) {
@@ -17706,8 +17706,8 @@ function readMap(ns) {
 }
 function readStruct(ns, count, startPos) {
   const isUnion = ns.isUnionSchema();
-  const cache7 = loadCborStructIterator(ns);
-  const { memberSchemas, encodedKeys, memberNames } = cache7;
+  const cache6 = loadCborStructIterator(ns);
+  const { memberSchemas, encodedKeys, memberNames } = cache6;
   const z = encodedKeys.length;
   const result = {};
   let unknownKey;
@@ -17890,8 +17890,8 @@ function readListIndefinite(ns) {
 function readMapIndefinite(ns) {
   pos += 1;
   if (ns.isStructSchema()) {
-    const cache7 = loadCborStructIterator(ns);
-    const { memberSchemas, encodedKeys, memberNames } = cache7;
+    const cache6 = loadCborStructIterator(ns);
+    const { memberSchemas, encodedKeys, memberNames } = cache6;
     const z = encodedKeys.length;
     const isUnion = ns.isUnionSchema();
     const result = {};
@@ -22041,18 +22041,18 @@ var init_bdd = __esm({
 });
 
 // node_modules/@aws-sdk/nested-clients/dist-es/submodules/sso-oidc/endpoint/endpointResolver.js
-var cache2, defaultEndpointResolver;
+var cache, defaultEndpointResolver;
 var init_endpointResolver = __esm({
   "node_modules/@aws-sdk/nested-clients/dist-es/submodules/sso-oidc/endpoint/endpointResolver.js"() {
     init_client3();
     init_endpoints();
     init_bdd();
-    cache2 = new EndpointCache({
+    cache = new EndpointCache({
       size: 50,
       params: ["Endpoint", "Region", "UseDualStack", "UseFIPS"]
     });
     defaultEndpointResolver = (endpointParams, context = {}) => {
-      return cache2.get(endpointParams, () => decideEndpoint(bdd, {
+      return cache.get(endpointParams, () => decideEndpoint(bdd, {
         endpointParams,
         logger: context.logger
       }));
@@ -23120,18 +23120,18 @@ var init_bdd2 = __esm({
 });
 
 // node_modules/@aws-sdk/nested-clients/dist-es/submodules/sso/endpoint/endpointResolver.js
-var cache3, defaultEndpointResolver2;
+var cache2, defaultEndpointResolver2;
 var init_endpointResolver2 = __esm({
   "node_modules/@aws-sdk/nested-clients/dist-es/submodules/sso/endpoint/endpointResolver.js"() {
     init_client3();
     init_endpoints();
     init_bdd2();
-    cache3 = new EndpointCache({
+    cache2 = new EndpointCache({
       size: 50,
       params: ["Endpoint", "Region", "UseDualStack", "UseFIPS"]
     });
     defaultEndpointResolver2 = (endpointParams, context = {}) => {
-      return cache3.get(endpointParams, () => decideEndpoint(bdd2, {
+      return cache2.get(endpointParams, () => decideEndpoint(bdd2, {
         endpointParams,
         logger: context.logger
       }));
@@ -24129,18 +24129,18 @@ var init_bdd3 = __esm({
 });
 
 // node_modules/@aws-sdk/nested-clients/dist-es/submodules/sts/endpoint/endpointResolver.js
-var cache4, defaultEndpointResolver3;
+var cache3, defaultEndpointResolver3;
 var init_endpointResolver3 = __esm({
   "node_modules/@aws-sdk/nested-clients/dist-es/submodules/sts/endpoint/endpointResolver.js"() {
     init_client3();
     init_endpoints();
     init_bdd3();
-    cache4 = new EndpointCache({
+    cache3 = new EndpointCache({
       size: 50,
       params: ["Endpoint", "Region", "UseDualStack", "UseFIPS", "UseGlobalEndpoint"]
     });
     defaultEndpointResolver3 = (endpointParams, context = {}) => {
-      return cache4.get(endpointParams, () => decideEndpoint(bdd3, {
+      return cache3.get(endpointParams, () => decideEndpoint(bdd3, {
         endpointParams,
         logger: context.logger
       }));
@@ -25465,18 +25465,18 @@ var init_bdd4 = __esm({
 });
 
 // node_modules/@aws-sdk/nested-clients/dist-es/submodules/signin/endpoint/endpointResolver.js
-var cache5, defaultEndpointResolver4;
+var cache4, defaultEndpointResolver4;
 var init_endpointResolver4 = __esm({
   "node_modules/@aws-sdk/nested-clients/dist-es/submodules/signin/endpoint/endpointResolver.js"() {
     init_client3();
     init_endpoints();
     init_bdd4();
-    cache5 = new EndpointCache({
+    cache4 = new EndpointCache({
       size: 50,
       params: ["Endpoint", "IsControlPlane", "IsOAuthEndpoint", "Region", "UseDualStack", "UseFIPS"]
     });
     defaultEndpointResolver4 = (endpointParams, context = {}) => {
-      return cache5.get(endpointParams, () => decideEndpoint(bdd4, {
+      return cache4.get(endpointParams, () => decideEndpoint(bdd4, {
         endpointParams,
         logger: context.logger
       }));
@@ -32155,7 +32155,7 @@ var require_dist_cjs19 = __commonJS({
       r5 + 4
     ]);
     var bdd5 = BinaryDecisionDiagram2.from(nodes5, root5, _data5.conditions, _data5.results);
-    var cache7 = new EndpointCache2({
+    var cache6 = new EndpointCache2({
       size: 50,
       params: [
         "AccountId",
@@ -32170,7 +32170,7 @@ var require_dist_cjs19 = __commonJS({
       ]
     });
     var defaultEndpointResolver5 = (endpointParams, context = {}) => {
-      return cache7.get(endpointParams, () => decideEndpoint2(bdd5, {
+      return cache6.get(endpointParams, () => decideEndpoint2(bdd5, {
         endpointParams,
         logger: context.logger
       }));
@@ -37504,8 +37504,8 @@ var Response$1 = class Response$12 {
   #body;
   #init;
   [getResponseCache]() {
-    const cache7 = this[cacheKey];
-    const liveHeaders = cache7 && cache7[2] instanceof Headers ? cache7[2] : void 0;
+    const cache6 = this[cacheKey];
+    const liveHeaders = cache6 && cache6[2] instanceof Headers ? cache6[2] : void 0;
     delete this[cacheKey];
     return this[responseCache] ||= new GlobalResponse(this.#body, liveHeaders ? {
       status: this.#init?.status,
@@ -37533,10 +37533,10 @@ var Response$1 = class Response$12 {
     ];
   }
   get headers() {
-    const cache7 = this[cacheKey];
-    if (cache7) {
-      if (!(cache7[2] instanceof Headers)) cache7[2] = new Headers(cache7[2] || (cache7[1] === null ? void 0 : { "content-type": defaultContentType }));
-      return cache7[2];
+    const cache6 = this[cacheKey];
+    if (cache6) {
+      if (!(cache6[2] instanceof Headers)) cache6[2] = new Headers(cache6[2] || (cache6[1] === null ? void 0 : { "content-type": defaultContentType }));
+      return cache6[2];
     }
     return this[getResponseCache]().headers;
   }
@@ -40037,96 +40037,6 @@ var cors = (options2) => {
     if (opts.origin !== "*") c5.header("Vary", "Origin", { append: true });
   };
 };
-
-// server/live.ts
-var CACHE_TTL_MS = 6e4;
-var cache = null;
-var POOL_PROM_URL = process.env.POOL_PROM_URL || "https://pool.256foundation.org";
-var MEMPOOL_API_URL = process.env.MEMPOOL_API_URL || "https://mempool.space/api";
-var FETCH_TIMEOUT_MS = 4e3;
-async function fetchJson(url, timeoutMs = FETCH_TIMEOUT_MS) {
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
-  try {
-    const res = await fetch(url, { signal: ctrl.signal, headers: { Accept: "application/json" } });
-    if (!res.ok) throw new Error(`${res.status}`);
-    return await res.json();
-  } finally {
-    clearTimeout(timer);
-  }
-}
-async function poolQuery(query) {
-  try {
-    const url = `${POOL_PROM_URL}/api/v1/query?query=${encodeURIComponent(query)}`;
-    const body = await fetchJson(url);
-    if (body?.status !== "success" || !body.data?.result?.[0]) return null;
-    const n3 = Number(body.data.result[0].value[1]);
-    return Number.isFinite(n3) ? n3 : null;
-  } catch {
-    return null;
-  }
-}
-function formatHashrate(hps) {
-  if (!Number.isFinite(hps) || hps <= 0) return "0 H/s";
-  const units = ["H/s", "kH/s", "MH/s", "GH/s", "TH/s", "PH/s", "EH/s"];
-  let i5 = 0;
-  let v = hps;
-  while (v >= 1e3 && i5 < units.length - 1) {
-    v /= 1e3;
-    i5 += 1;
-  }
-  return `${v >= 100 ? v.toFixed(0) : v.toFixed(1)} ${units[i5]}`;
-}
-async function getPool() {
-  const [total, active] = await Promise.all([
-    poolQuery("sum(rate(worker_shares_valid_total[5m]))"),
-    poolQuery("count(sum by (btcaddress) (rate(worker_shares_valid_total[5m])))")
-  ]);
-  return {
-    hashrate: total != null ? formatHashrate(total) : null,
-    hashrateHps: total,
-    activeWorkers: active,
-    source: "pool.256foundation.org Prometheus"
-  };
-}
-async function getNetwork() {
-  const result = {
-    difficulty: null,
-    hashrate: null,
-    blockHeight: null,
-    source: "mempool.space"
-  };
-  try {
-    const height = await fetchJson(`${MEMPOOL_API_URL}/v1/blocks/tip/height`, 3e3);
-    const n3 = Number(height);
-    result.blockHeight = Number.isFinite(n3) ? n3 : null;
-  } catch {
-  }
-  try {
-    const stats = await fetchJson(`${MEMPOOL_API_URL}/v1/mining/hashrate/3d`, 4e3);
-    const hr2 = Number(stats.currentHashrate) || stats.hashrates?.at(-1)?.avgHashrate;
-    if (hr2 && Number.isFinite(hr2)) result.hashrate = formatHashrate(hr2);
-    const diff = Number(stats.currentDifficulty) || stats.difficulty?.at(-1)?.difficulty;
-    if (diff && Number.isFinite(diff)) result.difficulty = formatDifficulty(diff);
-  } catch {
-  }
-  return result;
-}
-function formatDifficulty(d5) {
-  if (!Number.isFinite(d5)) return "\u2014";
-  if (d5 >= 1e12) return `${(d5 / 1e12).toFixed(2)} T`;
-  if (d5 >= 1e9) return `${(d5 / 1e9).toFixed(2)} G`;
-  return d5.toExponential(2);
-}
-async function getLiveStats() {
-  if (cache && Date.now() - cache.at < CACHE_TTL_MS) {
-    return { ...cache.value, cacheAgeSeconds: Math.round((Date.now() - cache.at) / 1e3) };
-  }
-  const [pool, network] = await Promise.all([getPool(), getNetwork()]);
-  const value = { updated: (/* @__PURE__ */ new Date()).toISOString(), cacheAgeSeconds: 0, pool, network };
-  cache = { at: Date.now(), value };
-  return value;
-}
 
 // lib/retrieval.ts
 var CHUNK_TOKENS = 300;
@@ -55580,18 +55490,18 @@ async function prepareKey(entry, key, usage) {
     if (keyObject = key, keyObject.type === "secret")
       return keyObject.export();
   }
-  cache6 ||= /* @__PURE__ */ new WeakMap();
+  cache5 ||= /* @__PURE__ */ new WeakMap();
   const cacheKey2 = key;
-  let cached = cache6.get(cacheKey2);
+  let cached = cache5.get(cacheKey2);
   if (cached?.[alg])
     return cached[alg];
-  if (cached || cache6.set(cacheKey2, cached = {}), keyObject && typeof keyObject.toCryptoKey == "function") {
+  if (cached || cache5.set(cacheKey2, cached = {}), keyObject && typeof keyObject.toCryptoKey == "function") {
     const isPublic = keyObject.type === "public", crv = nist[keyObject.asymmetricKeyDetails?.namedCurve], params = entry.resolve?.({ crv, asymmetricKeyType: keyObject.asymmetricKeyType }) ?? entry.subtle;
     return cached[alg] = keyObject.toCryptoKey(params, isPublic, entry.usages[isPublic ? 0 : 1]);
   }
   return normalized ??= keyObject.export({ format: "jwk" }), normalized.alg = alg, cached[alg] = await jwkToKey(entry, normalized);
 }
-var cache6;
+var cache5;
 var nist = {
   __proto__: null,
   prime256v1: "P-256",
@@ -55897,8 +55807,8 @@ function isUsableJWK(jwk, entry, alg, kid) {
   const { kty, key_ops: keyOps, ext, kid: jwkKid, alg: jwkAlg, use: use2, crv } = jwk;
   return (ext === void 0 || typeof ext == "boolean") && (keyOps === void 0 || Array.isArray(keyOps) && keyOps.every((operation2, index) => typeof operation2 == "string" && keyOps.indexOf(operation2) === index) && keyOps.includes("verify")) && entry.kty.includes(kty) && (kid === void 0 || typeof kid == "string" && kid === jwkKid) && (jwkAlg === void 0 ? kty !== "AKP" : alg === jwkAlg) && (use2 === void 0 || use2 === "sig") && (!entry.crv || crv === entry.crv);
 }
-async function importWithAlgCache(cache7, jwk, entry) {
-  const cached = cache7.get(jwk) || cache7.set(jwk, {}).get(jwk), { alg } = entry;
+async function importWithAlgCache(cache6, jwk, entry) {
+  const cached = cache6.get(jwk) || cache6.set(jwk, {}).get(jwk), { alg } = entry;
   if (cached[alg] === void 0) {
     const pending = jwkToKey(entry, jwk, true).then((key) => {
       if (key.type !== "public")
@@ -55987,10 +55897,10 @@ function createRemoteJWKSet(url, options2) {
     throw new TypeError('"timeoutDuration" option must be a non-negative integer');
   const timeoutDuration = typeof timeoutOption == "number" ? timeoutOption : 5e3, cooldownDuration = validateDuration(opts.cooldownDuration, 3e4, "cooldownDuration"), cacheMaxAge = validateDuration(opts.cacheMaxAge, 6e5, "cacheMaxAge"), headers = new Headers(opts.headers);
   USER_AGENT2 && !headers.has("User-Agent") && headers.set("User-Agent", USER_AGENT2), headers.has("accept") || headers.set("accept", "application/json, application/jwk-set+json");
-  const fetchImpl = opts[customFetch], cache7 = opts[jwksCache];
+  const fetchImpl = opts[customFetch], cache6 = opts[jwksCache];
   let jwksTimestamp, pendingFetch, reloadSequence = 0, appliedSequence = 0, local;
-  if (cache7 && typeof cache7 == "object") {
-    const { uat, jwks } = cache7;
+  if (cache6 && typeof cache6 == "object") {
+    const { uat, jwks } = cache6;
     isFreshFor(uat, cacheMaxAge) && isJwkSet(jwks) && (jwksTimestamp = uat, local = createLocalJWKSet(jwks));
   }
   const reload = async () => {
@@ -56001,7 +55911,7 @@ function createRemoteJWKSet(url, options2) {
           return;
         local = next;
         const updatedAt = Date.now();
-        cache7 && (cache7.uat = updatedAt, cache7.jwks = json2), jwksTimestamp = updatedAt, appliedSequence = sequence;
+        cache6 && (cache6.uat = updatedAt, cache6.jwks = json2), jwksTimestamp = updatedAt, appliedSequence = sequence;
       }).finally(() => {
         pendingFetch === current && (pendingFetch = void 0);
       });
@@ -56124,7 +56034,7 @@ function providers() {
 }
 var STATE_COOKIE = "wiki_oauth";
 var STATE_TTL = 600;
-async function fetchJson2(url, init) {
+async function fetchJson(url, init) {
   const res = await fetch(url, { ...init, signal: AbortSignal.timeout(1e4) });
   if (!res.ok) throw new Error(`${url} \u2192 ${res.status}`);
   return await res.json();
@@ -56242,7 +56152,7 @@ function readStateCookie(cookieHeader) {
 }
 async function sessionFromTokens(cfg, tokens) {
   if (cfg.id === "github") {
-    const user = await fetchJson2("https://api.github.com/user", {
+    const user = await fetchJson("https://api.github.com/user", {
       headers: { Authorization: `Bearer ${tokens.access_token}`, Accept: "application/vnd.github+json", "User-Agent": "256-wiki" }
     });
     return { sub: `github:${user.id}`, tier: "user", name: user.login, via: "github" };
@@ -56555,13 +56465,6 @@ app.get("/api/search", (c5) => {
     { query: q3, packHash: pack.meta.contentHash, count: results.length, results },
     { headers: { "Cache-Control": "public, max-age=60" } }
   );
-});
-app.get("/api/live.json", async (c5) => {
-  const stats = await getLiveStats();
-  return c5.json(stats, {
-    headers: { "Cache-Control": "public, max-age=60" }
-    // CDN caches 60s too
-  });
 });
 var store = selectStore();
 app.post("/api/ask", async (c5) => {

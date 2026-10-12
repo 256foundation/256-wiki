@@ -60,7 +60,7 @@ not know.`}</code></pre>
 
       <p className="note">
         API reference: <code>/api/index.json</code> · <code>/api/search?q=</code> ·{" "}
-        <code>/api/pages/&lt;slug&gt;.md</code> · <code>/api/live.json</code> · <code>POST /api/ask</code> · docs land
+        <code>/api/pages/&lt;slug&gt;.md</code> · <code>POST /api/ask</code> · docs land
         with the Phase 3 deploy.
       </p>
     </div>

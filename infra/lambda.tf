@@ -1,4 +1,4 @@
-# Node Lambda app (Hono): /api/ask, /api/suggest, /api/search, /api/live.json,
+# Node Lambda app (Hono): /api/ask, /api/suggest, /api/search,
 # /mcp, /a/<id> permalinks. One function keeps warm starts and cost minimal;
 # split later only if cold-start or blast radius demands it.
 #
