@@ -8,6 +8,8 @@
 
 **Phase 0 + 1 + 2 + 3 complete. Phase 4 loops complete in code + dev-verified: live gaps board (query-log clustering), weekly gap-report workflow, POD256 episode chips. All planned site phases now built — remaining work is the launch checklist (privacy page, alarms, load test, abuse review) which needs Tyler's AWS dev-environment pass.**
 
+**Local session handoff — read `.context/HANDOFF.md` first (gitignored, not pushed).** It carries the design-system contract, exact dev runbook/env, gotchas, screenshot inventory and blocker list for picking this up in a fresh session. Everything durable is in this file + git history; that one holds the working context an agent needs to resume.
+
 ## Done
 
 | Date | Task | Commit/PR | Notes |
@@ -31,6 +33,8 @@
 | 2026-10-12 | Rebrand step 8 — full verification: desktop 1440 + mobile 390, light+dark (13 screenshots in docs/screens/rebrand-*), all gates green (57/57 tests, typecheck, eslint, next build export, build:lambda, terraform fmt+validate, CI green on every push) | (this commit) | Rebrand complete: 256F tokens light+dark auto, grok landing w/ 5 grounded chips, LiveStrip gone, telegraphic ask console, /library merged, /agents live, about trimmed, permalinks standalone |
 | 2026-10-12 | Rebrand fidelity pass — real 256 logo (secondary mark, light/dark <picture> swap) in header; exact telehash PCB tile (60×60 traces+pads, verbatim from website repo) + purple glow + vignette on the hero; site Panel motif on the answer card (eyebrow header bar, purple footer permalink bar); square corners + mono bold glow buttons site-wide; header/footer chrome to site values (#1e1028, blur, /30 border, 2px gradient hairline); eyebrow bar-and-label | (this commit) | Calibrated side-by-side against website-256F dev (telehash); light+dark verified desktop+mobile; 17 docs/screens captures refreshed; 57/57; build export clean |
 | 2026-10-12 | Rebrand step 4 — ask console diet: telegraphic meta (`signed in — 25/day · 24 left today · sign out`), minimal answer view (model/pack badges removed, `cache hit — free` state kept), one-line quota/breaker/error states, /ask page copy cut | (this commit) | Verified in browser: chip → prefill → ask → minimal answer; cache-hit path shows the single free badge; 57/57 tests |
+
+| 2026-10-12 | Session handoff notes for cross-session pickup: gitignored `.context/HANDOFF.md` (status, commit ledger, design-system contract, dev runbook, gotchas, screenshot inventory, blockers, next moves) + STATE pointer | (this commit) | Local-only — not pushed; discoverable via the Current-status pointer above; refresh after any further skin/ops work |
 
 ## In progress
 
