@@ -30,6 +30,9 @@ data/pack/
 # misc
 .DS_Store
 *.log
+
+# session-local agent context (handoff notes; never published)
+.context/
 coverage/
 tsconfig.tsbuildinfo
 next-env.d.ts
